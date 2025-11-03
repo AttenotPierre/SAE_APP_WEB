@@ -1,5 +1,7 @@
 <?php
 namespace iutnc\SAE_APP_WEB\action;
+use iutnc\SAE_APP_WEB\exception\AuthException;
+use iutnc\SAE_APP_WEB\auth\AuthProvider;
 
 class AuthAction extends Action{
     public function __invoke(): string {
