@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+namespace iutnc\SAE_APP_WEB\repository;
 use PDO;
 
 class Repository{
@@ -17,12 +18,12 @@ class Repository{
         );
     }
 
-    public static function getInstance(): repository {
+    public static function getInstance(): Repository {
         if (self::$instance === null) {
             if (empty(self::$config)) {
                 throw new \Exception("Config not set");
             }
-            self::$instance = new repository(self::$config);
+            self::$instance = new Repository(self::$config);
         }
         return self::$instance;
     }

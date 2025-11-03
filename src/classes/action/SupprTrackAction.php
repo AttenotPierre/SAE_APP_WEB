@@ -1,16 +1,18 @@
 <?php
 
 namespace iutnc\SAE_APP_WEB\action;
+use iutnc\SAE_APP_WEB\repository\Repository;
+
 
 class SupprTrackAction extends Action{
     public function __invoke(): string {
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $playlist_id = $_SESSION['id_courant'];
-            $track_list = DeefyRepository::getInstance()->getAllTrackPlaylist($playlist_id);
+            $track_list = Repository::getInstance()->getAllTrackPlaylist($playlist_id);
 
             $options = '';
             foreach ($track_list as $track) {
-                $id = htmlspecialchars(DeefyRepository::getInstance()->getIdTrack($track));
+                $id = htmlspecialchars(Repository::getInstance()->getIdTrack($track));
                 $titre = htmlspecialchars($track->titre);
                 $options .= "<option value=\"$id\">$titre</option>";
             }
@@ -39,7 +41,7 @@ class SupprTrackAction extends Action{
         }else{
             $id_pl = (int) $_POST['id_pl'];
                 $id_track = (int) $_POST['id_track'];
-            DeefyRepository::getInstance()->SupprimerTrackPlaylist($id_pl, $id_track);
+            Repository::getInstance()->SupprimerTrackPlaylist($id_pl, $id_track);
             return "<p class='center'>Piste supprimée avec succès de la playlist.</p><a href=\"?action=playlist&id=$id_pl\">Retour à la playlist</a>";
         }
     }

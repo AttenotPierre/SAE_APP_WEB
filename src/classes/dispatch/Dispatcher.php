@@ -1,6 +1,7 @@
 <?php
 
 namespace iutnc\SAE_APP_WEB\Dispatch;
+use iutnc\SAE_APP_WEB\action;
 
 
 class Dispatcher {
@@ -15,39 +16,6 @@ class Dispatcher {
     public function run() : void{
         $html = '';
        switch ($this->action) {
-        case 'playlist':
-            $html = (new action\DisplayPlaylist())();
-            break;
-        case 'add-Playlist':
-            $html = (new action\AddPlaylistAction())();
-            break;
-        case 'add-Track':
-            $html = (new action\addTrack())();
-            break;
-        case 'add-PodTrack':
-            $html = (new action\AddPodcastTrackAction())();
-            break;
-        case 'auth':
-            $html = (new action\AuthAction())();
-            break;
-        case 'register':
-            $html = (new action\RegisterAction())();
-            break;
-        case 'playlistRender':
-            $html = (new action\playlistAction())();
-            break;
-        case 'deconnect':
-            $html = (new action\DeconnectAction())();
-            break;
-        case 'supprimerTrack':
-            $html = (new action\SupprTrackAction())();
-            break;
-        case 'Choice-Track':
-            $html = (new action\ChoiceTrackAction())();
-            break;
-        case 'Choice-Podcast':
-            $html = (new action\ChoicePodcastAction())();
-            break;
         default:
             $html = (new action\DefaultAction())();
             break;
