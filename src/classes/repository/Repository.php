@@ -161,4 +161,50 @@ class Repository{
         }
         return $series;
     }
+
+    public function getSeriePrefByUserId(int $id_user) : Catalogue {
+        $query = "SELECT * from serie inner join user2serie_listepref on serie.id = user2serie_listepref.id_serie where user2serie_listepref.id_user = :id_user";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute(['id_user' => $id_user]);
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $catalogue = new Catalogue();
+        foreach ($result as $row) {
+            $series = new Series(
+                (int)$row['id'],
+                $row['titre'],
+                $row['descriptif'],
+                $row['img'],
+                (int)$row['annee'],
+                $row['date_ajout'],
+                $row['theme']?? "Non défini",
+                $row['public_cible'] ?? "Non défini"
+            );
+            $catalogue->addSeries($series);
+        }
+        return $catalogue;
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function getEpisodeById(int $id_episode): Episode {
+        $query = "SELECT * FROM episode WHERE id = :id_episode";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute(['id_episode' => $id_episode]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($row) {
+            return new Episode(
+                (int)$row['id'],
+                (int)$row['numero'],
+                $row['titre'],
+                $row['resume'],
+                (int)$row['duree'],
+                $row['file'],
+                (int)$row['serie_id']
+            );
+        }
+        throw new \Exception("L'épisode n'existe pas");
+    }
+
+
 }
