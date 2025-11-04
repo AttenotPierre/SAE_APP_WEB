@@ -1,11 +1,13 @@
 <?php
 namespace iutnc\SAE_APP_WEB\Auth;
 
+use iutnc\SAE_APP_WEB\exception\AuthException;
+use iutnc\SAE_APP_WEB\repository\Repository;
 
 class AuthProvider {
 
     public static function signin(string $email,string $passwd2check): void {
-        $hash = DeefyRepository::getInstance()->getHashUser($email);
+        $hash = Repository::getInstance()->getHashUser($email);
         if (!password_verify($passwd2check, $hash))
             throw new AuthException("MOT DE PASSE OU EMAIL INCORRECTE");
         $_SESSION['user'] = $email;
@@ -17,7 +19,7 @@ class AuthProvider {
         if (! filter_var($pseudo, FILTER_SANITIZE_STRING)) {
             throw new AuthException("REGISTER ERROR");
         }
-        if (DeefyRepository::getInstance()->userExists($email)) {
+        if (Repository::getInstance()->userExists($email)) {
             throw new AuthException("REGISTER ERROR");
         }else{
             if (!self::checkPasswordStrength($pass, 10)) {
@@ -25,7 +27,7 @@ class AuthProvider {
             }
             $hash = password_hash($pass, PASSWORD_DEFAULT, ['cost'=>12]);
             //a ajouter dans repository
-            DeefyRepository::getInstance()->addUser($email, $pseudo, $hash);
+            Repository::getInstance()->addUser($email, $pseudo, $hash);
             $_SESSION['user'] = $email;
         }
     }

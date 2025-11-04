@@ -56,9 +56,49 @@ class Repository{
         return ($result['count'] > 0);
     }
 
+    public function getHashUser(String $email): ?String {
+        $query = "SELECT passwd FROM User WHERE email = :email";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute(['email' => $email]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return (isset($result['passwd'])) ? $result['passwd']:null;
+
+    }
+
     public function getCatalogue(): Catalogue {
         $query = "SELECT * FROM serie";
         $stmt = $this->pdo->query($query);
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $catalogue = new Catalogue();
+        foreach ($result as $row) {
+            $series = new Series(
+                (int)$row['id'],
+                $row['title'],
+                $row['description'],
+                $row['img'],
+                (int)$row['annee'],
+                $row['dateAjout'],
+                $row['theme'],
+                $row['public_cible']
+            );
+            $catalogue->addSeries($series);
+        }
+        return $catalogue;
+    }
+
+    public function getUserIdByEmail(string $email): ?int {
+        $query = "SELECT id FROM User WHERE email = :email";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute(['email' => $email]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result ? (int)$result['id'] : null;
+    }
+
+
+    public function getSeriePref(int $id_user): Catalogue {
+        $query = "SELECT * FROM serie where id_user = :id_user";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute(['id_user' => $id_user]);
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $catalogue = new Catalogue();
         foreach ($result as $row) {
