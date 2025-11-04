@@ -190,5 +190,11 @@ class Repository{
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
+    public function addSeriePref(int $serieId): void {
+        $user_id = $this->getUserIdByEmail($_SESSION['user']);
+        $query = "INSERT INTO user2serie_listepref (id_user, id_serie) VALUES (:id_user, :id_serie)";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute(['id_user' => $user_id, 'id_serie' => $serieId]);
+    }
 
 }
