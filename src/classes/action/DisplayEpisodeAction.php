@@ -12,7 +12,7 @@ class DisplayEpisodeAction extends Action {
         if(!isset($_SESSION['user'])){
             return "<p>Connecte toi pour regarder l'episode stp</p>";
         }
-        $id_episode = $_GET['id_episode'];
+        
 
         $repo = Repository::getInstance();
         //faire methode getEpisodeById dans repository
@@ -24,6 +24,7 @@ class DisplayEpisodeAction extends Action {
         $renderer = New EpisodeRender($episode);
         $html= $renderer->render();
         $html .= "<a href='?action=RegarderAction&id_episode=$id_episode'>Regarder</a><br>";
+        $repo -> setEnCoursSerie($episode->serieId);
         return $html;
 
 

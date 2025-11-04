@@ -25,8 +25,8 @@ class RegarderAction {
         
         
         
-        $html = "<p> {$chemin_video} </p>";
-        $html .= "<h2>Lecture en cours : {$episode->titre}</h2>";
+        
+        $html = "<h2>Lecture en cours : {$episode->titre}</h2>";
         $html .= "<p>Durée : {$episode->duree} secondes</p>";
 
         // Lecteur vidéo HTML5
