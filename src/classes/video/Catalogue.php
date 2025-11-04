@@ -10,8 +10,8 @@ class Catalogue
     {
         $this->series[] = $series;
     }
-    public function getSeries(): array
+    public function __get($name)
     {
-        return $this->series;
+        return $this->$name;
     }
 }

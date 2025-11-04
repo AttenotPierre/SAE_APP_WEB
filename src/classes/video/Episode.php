@@ -28,4 +28,9 @@ class Episode
         $this->chemin = $chemin;
         $this->serieId = $serieId;
     }
+
+    public function __get($name)
+    {
+        return $this->$name;
+    }
 }
