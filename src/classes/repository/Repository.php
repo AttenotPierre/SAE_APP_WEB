@@ -212,4 +212,27 @@ class Repository{
         }
     }
 
+    public function getEnCoursSeries(): Catalogue {
+        $user_id = $this->getUserIdByEmail($_SESSION['user']);
+        $query = "SELECT * from serie inner join user2serie_state on serie.id = user2serie_state.id_serie where user2serie_state.id_user = :id_user and user2serie_state.state = 'en_cours'";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute(['id_user' => $user_id]);
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $catalogue = new Catalogue();
+        foreach ($result as $row) {
+            $series = new Series(
+                (int)$row['id'],
+                $row['titre'],
+                $row['descriptif'],
+                $row['img'],
+                (int)$row['annee'],
+                $row['date_ajout'],
+                $row['theme']?? "Non défini",
+                $row['public_cible'] ?? "Non défini"
+            );
+            $catalogue->addSeries($series);
+        }
+        return $catalogue;
+    }
+
 }
