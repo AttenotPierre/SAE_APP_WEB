@@ -12,7 +12,7 @@ if (strpos(__DIR__, '/users/home/name') !== false) {
     $configPath = '/users/home/name/config/db.config.ini';
 } else {
     // localhost
-    $configPath = __DIR__ . '/config/db.config.ini';
+    $configPath = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'db.config.ini';
 }
 
 
