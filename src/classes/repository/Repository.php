@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 namespace iutnc\SAE_APP_WEB\repository;
+use classes\video\Catalogue;
 use PDO;
 
 class Repository{
@@ -44,6 +45,35 @@ class Repository{
         $query = "INSERT INTO User (email, pseudo,  passwd) VALUES (:email, :pseudo, :passwd)";
         $stmt = $this->pdo->prepare($query);
         $stmt->execute(['email' => $email, 'pseudo' => $pseudo, 'passwd' => $hash]);
+    }
+
+    public function userExists(string $email): bool {
+        $query = "SELECT COUNT(*) as count FROM User WHERE email = :email";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute(['email' => $email]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return ($result['count'] > 0);
+    }
+
+    public function getCatalogue(): Catalogue {
+        $query = "SELECT * FROM Series";
+        $stmt = $this->pdo->query($query);
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $catalogue = new Catalogue();
+        foreach ($result as $row) {
+            $series = new \classes\video\Series(
+                (int)$row['id'],
+                $row['title'],
+                $row['description'],
+                $row['img'],
+                (int)$row['annee'],
+                $row['dateAjout'],
+                $row['theme'],
+                $row['public_cible']
+            );
+            $catalogue->addSeries($series);
+        }
+        return $catalogue;
     }
 
 }
