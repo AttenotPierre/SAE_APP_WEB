@@ -3,6 +3,7 @@
 declare(strict_types=1);
 namespace iutnc\SAE_APP_WEB\repository;
 use iutnc\SAE_APP_WEB\video\Catalogue;
+use iutnc\SAE_APP_WEB\video\Episode;
 use iutnc\SAE_APP_WEB\video\Series;
 use PDO;
 
@@ -73,13 +74,13 @@ class Repository{
         foreach ($result as $row) {
             $series = new Series(
                 (int)$row['id'],
-                $row['title'],
-                $row['description'],
+                $row['titre'],
+                $row['descriptif'],
                 $row['img'],
                 (int)$row['annee'],
-                $row['dateAjout'],
-                $row['theme'],
-                $row['public_cible']
+                $row['date_ajout'],
+                $row['theme']?? "Non défini",
+                $row['public_cible'] ?? "Non défini"
             );
             $catalogue->addSeries($series);
         }
@@ -117,4 +118,47 @@ class Repository{
         return $catalogue;
     }
 
+    public function getSerie(int $id_serie): Series {
+        $query = "SELECT * FROM serie WHERE id = :id_serie";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute(['id_serie' => $id_serie]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($row) {
+            return new Series(
+                (int)$row['id'],
+                $row['titre'],
+                $row['descriptif'],
+                $row['img'],
+                (int)$row['annee'],
+                $row['date_ajout'],
+                $row['theme']?? "Non défini",
+                $row['public_cible'] ?? "Non défini"
+            );
+        }
+        throw new \Exception("La série n'existe pas");
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function getEpisodesBySerieId(int $serieId): Series {
+        $query = "SELECT * FROM episode WHERE serie_id = :serie_id ORDER BY numero ASC";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute(['serie_id' => $serieId]);
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $series = $this->getSerie($serieId);
+        foreach ($result as $row) {
+            $episode = new Episode(
+                (int)$row['id'],
+                (int)$row['numero'],
+                $row['titre'],
+                $row['resume'],
+                (int)$row['duree'],
+                $row['file'],
+                (int)$row['serie_id']
+            );
+            $series->addEpisode($episode);
+        }
+        return $series;
+    }
 }
