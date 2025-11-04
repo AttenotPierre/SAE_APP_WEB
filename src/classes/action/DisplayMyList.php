@@ -8,7 +8,7 @@ class DisplayMyList extends Action {
     public function __invoke() : string {
         if (isset($_SESSION['user'])) {
             $email = $_SESSION['user'];
-            $user_id = Repository::getInstance()->getUserIdbyEmail($email);
+            $user_id = Repository::getInstance()->getUserIdByEmail($email);
             $liste = Repository::getInstance()->getSeriePref($user_id);
             $html = "<div>";
             foreach ($liste as $serie) {
