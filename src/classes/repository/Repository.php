@@ -178,7 +178,7 @@ class Repository{
         $query = "SELECT id FROM User WHERE email = :email";
         $stmt = $this->pdo->prepare($query);
         $stmt->execute(['email' => $email]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
+        return (int)$stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     public function addSeriePref(int $serieId): void {
