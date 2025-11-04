@@ -95,29 +95,6 @@ class Repository{
         return $result ? (int)$result['id'] : null;
     }
 
-
-    public function getSeriePref(int $id_user): Catalogue {
-        $query = "SELECT * FROM serie where id_user = :id_user";
-        $stmt = $this->pdo->prepare($query);
-        $stmt->execute(['id_user' => $id_user]);
-        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        $catalogue = new Catalogue();
-        foreach ($result as $row) {
-            $series = new Series(
-                (int)$row['id'],
-                $row['titre'],
-                $row['descriptif'],
-                $row['img'],
-                (int)$row['annee'],
-                $row['date_ajout'],
-                $row['theme']?? "Non défini",
-                $row['public_cible'] ?? "Non défini"
-            );
-            $catalogue->addSeries($series);
-        }
-        return $catalogue;
-    }
-
     public function getSerie(int $id_serie): Series {
         $query = "SELECT * FROM serie WHERE id = :id_serie";
         $stmt = $this->pdo->prepare($query);
@@ -162,7 +139,7 @@ class Repository{
         return $series;
     }
 
-    public function getSeriePrefByUserId(int $id_user) : Catalogue {
+    public function getSeriePref(int $id_user) : Catalogue {
         $query = "SELECT * from serie inner join user2serie_listepref on serie.id = user2serie_listepref.id_serie where user2serie_listepref.id_user = :id_user";
         $stmt = $this->pdo->prepare($query);
         $stmt->execute(['id_user' => $id_user]);
@@ -206,5 +183,18 @@ class Repository{
         throw new \Exception("L'épisode n'existe pas");
     }
 
+    public function getUserbyEmail(string $email): int {
+        $query = "SELECT id FROM User WHERE email = :email";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute(['email' => $email]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function addSeriePref(int $serieId): void {
+        $user_id = $this->getUserIdByEmail($_SESSION['user']);
+        $query = "INSERT INTO user2serie_listepref (id_user, id_serie) VALUES (:id_user, :id_serie)";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute(['id_user' => $user_id, 'id_serie' => $serieId]);
+    }
 
 }
