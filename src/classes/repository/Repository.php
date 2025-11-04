@@ -195,11 +195,21 @@ class Repository{
         $stmt->execute(['id_user' => $user_id, 'id_serie' => $serieId]);
     }
 
-//    public function setEnCoursSerie(int $id_episode): void {
-//        $user_id = $this->getUserIdByEmail($_SESSION['user']);
-//        $query = "REPLACE INTO user2serie_state (id_user, id_serie) VALUES (:id_user, :id_episode)";
-//        $stmt = $this->pdo->prepare($query);
-//        $stmt->execute(['id_user' => $user_id, 'id_episode' => $id_episode]);
-//    }
+    public function getEtatSerie(int $id_serie): string {
+        $user_id = $this->getUserIdByEmail($_SESSION['user']);
+        $query = "SELECT state FROM user2serie_state WHERE id_user = :id_user AND id_serie = :id_serie";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute(['id_user' => $user_id, 'id_serie' => $id_serie]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return (string) $result;
+    }
+    public function setEnCoursSerie(int $id_serie): void {
+        if ($this->getEtatSerie($id_serie) != 'en_cours') {
+            $user_id = $this->getUserIdByEmail($_SESSION['user']);
+            $query = "UPDATE user2serie_state SET state = 'en_cours' WHERE id_user = :id_user AND id_serie = :id_serie";
+            $stmt = $this->pdo->prepare($query);
+            $stmt->execute(['id_user' => $user_id, 'id_serie' => $id_serie]);
+        }
+    }
 
 }
