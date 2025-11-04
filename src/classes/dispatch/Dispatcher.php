@@ -28,6 +28,9 @@ class Dispatcher {
         case 'display-catalog':
             $html = (new action\DisplayCatalogAction())();
             break;
+        case 'displayMyList':
+            $html = (new action\DisplayMyList)();
+            break;
         case 'commenter':
             // $html = (new action\CommenterAction())();
             break;
@@ -59,12 +62,12 @@ class Dispatcher {
         </head>
         <body>
             <header class="container">
-            <h1>DEEFY</h1>
+            <h1>NetVod</h1>
             <nav>
                 
                     <a href="?action=default">Home</a>
                     <a href="?action=display-catalog">Catalogue</a>
-                    <a href="?action=add-Playlist">Ajouter Playlist</a>
+                    <a href="?action=displayMyList">Ma Liste</a>
                     <a href="?action=auth">Authentification</a>
                     <a href="?action=register">Inscription</a>
                     <a href="?action=deconnect">Déconnexion</a>
