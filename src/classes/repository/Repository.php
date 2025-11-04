@@ -55,6 +55,15 @@ class Repository{
         return ($result['count'] > 0);
     }
 
+    public function getHashUser(String $email): ?String {
+        $query = "SELECT passwd FROM User WHERE email = :email";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute(['email' => $email]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return (isset($result['passwd'])) ? $result['passwd']:null;
+
+    }
+
     public function getCatalogue(): Catalogue {
         $query = "SELECT * FROM Series";
         $stmt = $this->pdo->query($query);
