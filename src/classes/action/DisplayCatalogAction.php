@@ -8,7 +8,7 @@ use iutnc\SAE_APP_WEB\render\CatalogueRender;
 class DisplayCatalogAction extends Action {
 
     public function __invoke() : string {
-        // if (isset($_SESSION['id_user'])) {
+        // if (isset($_SESSION['user'])) {
             $catalogue = Repository::getInstance()->getCatalogue();
             $renderer = new CatalogueRender($catalogue);
             $rendu = $renderer->render();
