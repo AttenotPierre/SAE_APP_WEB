@@ -86,14 +86,6 @@ class Repository{
         }
         return $catalogue;
     }
-
-    public function getUserIdByEmail(string $email): ?int {
-        $query = "SELECT id FROM User WHERE email = :email";
-        $stmt = $this->pdo->prepare($query);
-        $stmt->execute(['email' => $email]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
-
     public function getSerie(int $id_serie): Series {
         $query = "SELECT * FROM serie WHERE id = :id_serie";
         $stmt = $this->pdo->prepare($query);
@@ -181,11 +173,33 @@ class Repository{
         }
         throw new \Exception("L'épisode n'existe pas");
     }
+
+    public function getUserIdByEmail(string $email): int {
+        $query = "SELECT id FROM User WHERE email = :email";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute(['email' => $email]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
     public function addSeriePref(int $serieId): void {
         $user_id = $this->getUserIdByEmail($_SESSION['user']);
         $query = "INSERT INTO user2serie_listepref (id_user, id_serie) VALUES (:id_user, :id_serie)";
         $stmt = $this->pdo->prepare($query);
         $stmt->execute(['id_user' => $user_id, 'id_serie' => $serieId]);
     }
+
+    public function removeSeriePref(int $serieId): void {
+        $user_id = $this->getUserIdByEmail($_SESSION['user']);
+        $query = "DELETE FROM user2serie_listepref WHERE id_user = :id_user AND id_serie = :id_serie";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute(['id_user' => $user_id, 'id_serie' => $serieId]);
+    }
+
+//    public function setEnCoursSerie(int $id_episode): void {
+//        $user_id = $this->getUserIdByEmail($_SESSION['user']);
+//        $query = "REPLACE INTO user2serie_state (id_user, id_serie) VALUES (:id_user, :id_episode)";
+//        $stmt = $this->pdo->prepare($query);
+//        $stmt->execute(['id_user' => $user_id, 'id_episode' => $id_episode]);
+//    }
 
 }
