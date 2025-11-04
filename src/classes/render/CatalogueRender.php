@@ -18,7 +18,7 @@ class CatalogueRender implements Render{
         $html .= "<ul>\n";
         foreach ($this->catalogue->series as $serie) {
             $SerieRender = new SerieRender($serie);
-            $html .= "<li>" . $SerieRender->render() . "</li>\n";
+            $html .= "<li>" . $SerieRender->render() ."</li>\n";
         }
         $html .= "</ul>\n";
         $html .= "</div>\n";
