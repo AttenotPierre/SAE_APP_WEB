@@ -2,7 +2,7 @@
 
 use iutnc\SAE_APP_WEB\Dispatch;
 
-require __DIR__ . '/vendor/autoload.php';
+require __DIR__ . '/vendor/autoload.php'; 
 session_start();
 
 
