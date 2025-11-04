@@ -91,8 +91,7 @@ class Repository{
         $query = "SELECT id FROM User WHERE email = :email";
         $stmt = $this->pdo->prepare($query);
         $stmt->execute(['email' => $email]);
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $result ? (int)$result['id'] : null;
+        return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 
     public function getSerie(int $id_serie): Series {
@@ -182,14 +181,6 @@ class Repository{
         }
         throw new \Exception("L'épisode n'existe pas");
     }
-
-    public function getUserbyEmail(string $email): int {
-        $query = "SELECT id FROM User WHERE email = :email";
-        $stmt = $this->pdo->prepare($query);
-        $stmt->execute(['email' => $email]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
-
     public function addSeriePref(int $serieId): void {
         $user_id = $this->getUserIdByEmail($_SESSION['user']);
         $query = "INSERT INTO user2serie_listepref (id_user, id_serie) VALUES (:id_user, :id_serie)";
