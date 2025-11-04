@@ -73,13 +73,13 @@ class Repository{
         foreach ($result as $row) {
             $series = new Series(
                 (int)$row['id'],
-                $row['title'],
-                $row['description'],
+                $row['titre'],
+                $row['descriptif'],
                 $row['img'],
                 (int)$row['annee'],
-                $row['dateAjout'],
-                $row['theme'],
-                $row['public_cible']
+                $row['date_ajout'],
+                $row['theme']?? "Non défini",
+                $row['public_cible'] ?? "Non défini"
             );
             $catalogue->addSeries($series);
         }
