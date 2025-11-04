@@ -16,6 +16,9 @@ class RegisterAction extends Action{
             <body>
                 <h1>Inscription</h1>
                 <form action="?action=register" method="post" enctype="multipart/form-data">
+                    <label for="Pseudo">Pseudo :</label>
+                    <input type="pseudo" id="pseudo" name="pseudo" required>
+                    <br>
                     <label for="email">Email :</label>
                     <input type="email" id="email" name="email" required>
                     <br>
@@ -38,8 +41,19 @@ class RegisterAction extends Action{
             }else{
                 throw new AuthException("REGISTER ERROR");
             }
+
+            $pseudo = $_POST['pseudo'];
+            if (filter_var($pseudo, FILTER_VALIDATE_EMAIL)) {
+                try{
+                    AuthProvider::register($mail, $_POST['mdp'], $pseudo);
+                } catch(AuthException $e) {
+                    return "<p class='center'>Erreur lors de l'inscription (Mot de passe Invalide ou utilisateur déjà existant)</p><a href='?action=auth'>Se reconnecter</a>";
+                }
+            }else{
+                throw new AuthException("REGISTER ERROR");
+            }
             $_SESSION['email'] = $mail;
-            return "<p class='center'>Inscription réussie pour l'utilisateur : $mail</p>";
+            return "<p class='center'>Inscription réussie pour l'utilisateur : $pseudo</p>";
         }
     }
 

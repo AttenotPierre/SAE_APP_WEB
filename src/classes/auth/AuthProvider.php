@@ -10,8 +10,11 @@ class AuthProvider {
             throw new AuthException("MOT DE PASSE OU EMAIL INCORRECTE");
         $_SESSION['user'] = $email;
     }
-    public static function register(string $email,string $pass): void {
+    public static function register(string $email,string $pass, string $pseudo): void {
         if (! filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            throw new AuthException("REGISTER ERROR");
+        }
+        if (! filter_var($pseudo, FILTER_SANITIZE_STRING)) {
             throw new AuthException("REGISTER ERROR");
         }
         if (DeefyRepository::getInstance()->userExists($email)) {
@@ -21,7 +24,8 @@ class AuthProvider {
                 throw new AuthException("REGISTER ERROR");
             }
             $hash = password_hash($pass, PASSWORD_DEFAULT, ['cost'=>12]);
-            DeefyRepository::getInstance()->addUser($email, $hash);
+            //a ajouter dans repository
+            DeefyRepository::getInstance()->addUser($email, $pseudo, $hash);
             $_SESSION['user'] = $email;
         }
     }
