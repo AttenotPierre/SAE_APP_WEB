@@ -16,7 +16,7 @@ class DefaultAction extends Action {
                 $html = "<p class='center'>Auncune Playlist n'a été selectionné</p>";
             }
         }else{
-            $html = "<h1>Bienvenu sur Deefy !</h1>";
+            $html = "<h1>Bienvenu sur NetVod !</h1>";
             $html .= "<p class='center'>Veuillez vous connecter</p>";
         }
         return $html;
