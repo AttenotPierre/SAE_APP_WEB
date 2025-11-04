@@ -37,7 +37,7 @@ class RegarderAction {
         </video>
         HTML;
 
-        $html .= "<div><a href='?id_episode={$id_episode}' style='color:#E50914;font-weight:bold;'>⬅ Retour à la fiche</a></div>";
+        $html .= "<div><a href='?action=display-catalog'>⬅ Retour à la fiche</a></div>";
         $html .= "</div>";
         return $html;
     }
