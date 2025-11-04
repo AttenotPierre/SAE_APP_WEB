@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace iutnc\SAE_APP_WEB\render;
 
-use classes\video\Catalogue;
+use iutnc\SAE_APP_WEB\video\Catalogue;
 
 class CatalogueRender implements Render{
     private Catalogue $catalogue;
@@ -17,8 +17,8 @@ class CatalogueRender implements Render{
         $html .= "<h2>Catalogue NetVOD</h2>\n";
         $html .= "<ul>\n";
         foreach ($this->catalogue->series as $serie) {
-            $VideoRender = new VideoRender($serie);
-            $html .= "<li>" . $VideoRender->render() . "</li>\n";
+            $SerieRender = new SerieRender($serie);
+            $html .= "<li>" . $SerieRender->render() . "</li>\n";
         }
         $html .= "</ul>\n";
         $html .= "</div>\n";

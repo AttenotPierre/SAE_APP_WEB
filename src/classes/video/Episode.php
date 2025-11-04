@@ -1,6 +1,6 @@
 <?php
 
-namespace classes\video;
+namespace iutnc\SAE_APP_WEB\video;
 
 class Episode
 {

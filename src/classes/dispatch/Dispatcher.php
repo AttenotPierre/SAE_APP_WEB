@@ -26,7 +26,7 @@ class Dispatcher {
             $html = (new action\DeconnectAction())();
             break;
         case 'display-catalog':
-            // $html = (new action\DisplayCatalogAction())();
+            $html = (new action\DisplayCatalogAction())();
             break;
         case 'commenter':
             // $html = (new action\CommenterAction())();
@@ -63,7 +63,7 @@ class Dispatcher {
             <nav>
                 
                     <a href="?action=default">Home</a>
-                    <a href="?action=playlist">Mes Playlists</a>
+                    <a href="?action=display-catalog">Catalogue</a>
                     <a href="?action=add-Playlist">Ajouter Playlist</a>
                     <a href="?action=auth">Authentification</a>
                     <a href="?action=register">Inscription</a>

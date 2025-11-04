@@ -1,6 +1,6 @@
 <?php
 
-namespace classes\video;
+namespace iutnc\SAE_APP_WEB\video;
 
 class Series
 {
@@ -38,6 +38,11 @@ class Series
     public function addEpisode(Episode $episode): void
     {
         $this->episodes[] = $episode;
+    }
+
+    public function __get($name)
+    {
+        return $this->$name;
     }
 
 }

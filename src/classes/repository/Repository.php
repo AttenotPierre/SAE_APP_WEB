@@ -2,7 +2,8 @@
 
 declare(strict_types=1);
 namespace iutnc\SAE_APP_WEB\repository;
-use classes\video\Catalogue;
+use iutnc\SAE_APP_WEB\video\Catalogue;
+use iutnc\SAE_APP_WEB\video\Series;
 use PDO;
 
 class Repository{
@@ -56,20 +57,20 @@ class Repository{
     }
 
     public function getCatalogue(): Catalogue {
-        $query = "SELECT * FROM Series";
+        $query = "SELECT * FROM serie";
         $stmt = $this->pdo->query($query);
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $catalogue = new Catalogue();
         foreach ($result as $row) {
-            $series = new \classes\video\Series(
+            $series = new Series(
                 (int)$row['id'],
-                $row['title'],
-                $row['description'],
+                $row['titre'],
+                $row['descriptif'],
                 $row['img'],
                 (int)$row['annee'],
-                $row['dateAjout'],
-                $row['theme'],
-                $row['public_cible']
+                $row['date_ajout'],
+                $row['theme']?? "Non défini",
+                $row['public_cible'] ?? "Non défini"
             );
             $catalogue->addSeries($series);
         }

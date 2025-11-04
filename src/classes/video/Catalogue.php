@@ -1,10 +1,15 @@
 <?php
 
-namespace classes\video;
+namespace iutnc\SAE_APP_WEB\video;
 
 class Catalogue
 {
-    private array $series = [];
+    private array $series;
+
+    public function __construct()
+    {
+        $this->series = [];
+    }
 
     public function addSeries(Series $series): void
     {
