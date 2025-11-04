@@ -37,8 +37,11 @@ class Dispatcher {
         case 'supprListeAction':
             // $html = (new action\SupprListeAction())();
             break;
-        case 'lireAction':
-            // $html = (new action\LireAction())();
+        case 'DisplayEpisodeAction':
+            $html = (new action\DisplayEpisodeAction())();
+            break;
+        case 'RegarderAction':
+            $html = (new action\RegarderAction())();
             break;
         case 'displaySerie':
             $html = (new action\DisplaySerieAction())();

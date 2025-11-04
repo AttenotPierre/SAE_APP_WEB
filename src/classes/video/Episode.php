@@ -33,4 +33,6 @@ class Episode
     {
         return $this->$name;
     }
+
+ 
 }

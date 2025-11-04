@@ -1,0 +1,35 @@
+<?php
+
+namespace iutnc\SAE_APP_WEB\action;
+use iutnc\SAE_APP_WEB\exception\AuthException;
+use iutnc\SAE_APP_WEB\repository\Repository;
+use iutnc\SAE_APP_WEB\render\EpisodeRender;
+
+class DisplayEpisodeAction extends Action {
+
+    public function __invoke() : string {
+        $id_episode = $_GET['id_episode'];
+        if(!isset($_SESSION['user'])){
+            return "<p>Connecte toi pour regarder l'episode stp</p>";
+        }
+        $id_episode = $_GET['id_episode'];
+
+        $repo = Repository::getInstance();
+        //faire methode getEpisodeById dans repository
+        $episode = $repo->getEpisodeById($id_episode);
+        if(!$episode){
+            return "<p>Episode introuvable</p>";
+        }
+        
+        $renderer = New EpisodeRender($episode);
+        $html= $renderer->render();
+        $html .= "<a href='?action=RegarderAction&id_episode=$id_episode'>Regarder</a><br>";
+        return $html;
+
+
+    
+
+    
+    }
+
+}
