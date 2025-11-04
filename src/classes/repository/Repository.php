@@ -39,4 +39,11 @@ class Repository{
             'pass' => $conf['password']
         ];
     }
+
+    public function addUser(string $email, string $pseudo, string $hash): void {
+        $query = "INSERT INTO User (email, pseudo,  passwd) VALUES (:email, :pseudo, :passwd)";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute(['email' => $email, 'pseudo' => $pseudo, 'passwd' => $hash]);
+    }
+
 }
