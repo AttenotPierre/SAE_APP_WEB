@@ -16,6 +16,30 @@ class Dispatcher {
     public function run() : void{
         $html = '';
        switch ($this->action) {
+        case 'auth':
+            $html = (new action\AuthAction())();
+            break;
+        case 'register':
+            $html = (new action\RegisterAction())();
+            break;
+        case 'deconnect':
+            $html = (new action\DeconnectAction())();
+            break;
+        case 'display-catalog':
+            // $html = (new action\DisplayCatalogAction())();
+            break;
+        case 'commenter':
+            // $html = (new action\CommenterAction())();
+            break;
+        case 'ajoutListeAction':
+            // $html = (new action\AddListeAction())();
+            break;
+        case 'supprListeAction':
+            // $html = (new action\SupprListeAction())();
+            break;
+        case 'lireAction':
+            // $html = (new action\LireAction())();
+            break;
         default:
             $html = (new action\DefaultAction())();
             break;
