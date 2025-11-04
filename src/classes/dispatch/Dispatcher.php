@@ -43,6 +43,9 @@ class Dispatcher {
         case 'lireAction':
             // $html = (new action\LireAction())();
             break;
+        case 'displaySerie':
+            $html = (new action\DisplaySerieAction())();
+            break;
         default:
             $html = (new action\DefaultAction())();
             break;

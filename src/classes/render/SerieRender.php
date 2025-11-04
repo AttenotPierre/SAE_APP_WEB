@@ -16,7 +16,7 @@ class SerieRender implements Render{
     public function render():string {
         return <<< HTML
             <div class="video-item">
-                <a href="?action=displaySerie&id={$this->serie->id}"><h3>{$this->serie->title}</h3></a>
+                <a href="?action=displaySerie&id_serie={$this->serie->id}"><h3>{$this->serie->titre}</h3></a>
                 <p>{$this->serie->description}</p>
             </div>
         HTML;

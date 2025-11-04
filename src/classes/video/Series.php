@@ -5,7 +5,7 @@ namespace iutnc\SAE_APP_WEB\video;
 class Series
 {
     private int $id;
-    private string $title;
+    private string $titre;
     private string $description;
     private string $img;
     private int $annee;
@@ -17,7 +17,7 @@ class Series
 
     public function __construct(
         int $id,
-        string $title,
+        string $titre,
         string $description,
         string $img,
         int $annee,
@@ -26,7 +26,7 @@ class Series
         string $public_cible
     ) {
         $this->id = $id;
-        $this->title = $title;
+        $this->titre = $titre;
         $this->description = $description;
         $this->img = $img;
         $this->annee = $annee;
