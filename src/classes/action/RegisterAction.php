@@ -31,10 +31,13 @@ class RegisterAction extends Action{
             </html>
             HTML;
         }else{
+            $pseudo = $_POST['pseudo'];
+            filter_var($pseudo, FILTER_SANITIZE_STRING); 
             $mail = $_POST['email'];
+
             if (filter_var($mail, FILTER_VALIDATE_EMAIL)) {
                 try{
-                    AuthProvider::register($mail, $_POST['mdp']);
+                    AuthProvider::register($mail,$_POST['mdp'],$pseudo);
                 } catch(AuthException $e) {
                     return "<p class='center'>Erreur lors de l'inscription (Mot de passe Invalide ou utilisateur déjà existant)</p><a href='?action=auth'>Se reconnecter</a>";
                 }
@@ -42,16 +45,8 @@ class RegisterAction extends Action{
                 throw new AuthException("REGISTER ERROR");
             }
 
-            $pseudo = $_POST['pseudo'];
-            if (filter_var($pseudo, FILTER_VALIDATE_EMAIL)) {
-                try{
-                    AuthProvider::register($mail, $_POST['mdp'], $pseudo);
-                } catch(AuthException $e) {
-                    return "<p class='center'>Erreur lors de l'inscription (Mot de passe Invalide ou utilisateur déjà existant)</p><a href='?action=auth'>Se reconnecter</a>";
-                }
-            }else{
-                throw new AuthException("REGISTER ERROR");
-            }
+            
+                
             $_SESSION['email'] = $mail;
             return "<p class='center'>Inscription réussie pour l'utilisateur : $pseudo</p>";
         }
