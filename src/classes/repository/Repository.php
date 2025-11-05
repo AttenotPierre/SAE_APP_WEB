@@ -207,7 +207,7 @@ class Repository{
     public function setEnCoursSerie(int $id_serie): void {
         if ($this->getEtatSerie($id_serie) != 'en_cours') {
             $user_id = $this->getUserIdByEmail($_SESSION['user']);
-            $query = "UPDATE user2serie_state SET state = 'en_cours' WHERE id_user = :id_user AND id_serie = :id_serie";
+            $query = "insert into user2serie_state (id_user, id_serie, state) values (:id_user, :id_serie, 'en_cours')";
             $stmt = $this->pdo->prepare($query);
             $stmt->execute(['id_user' => $user_id, 'id_serie' => $id_serie]);
         }
