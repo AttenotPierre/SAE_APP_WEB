@@ -24,7 +24,6 @@ class DisplayEpisodeAction extends Action {
         $renderer = New EpisodeRender($episode);
         $html= $renderer->render();
         $html .= "<a href='?action=RegarderAction&id_episode=$id_episode'>Regarder</a><br>";
-        $repo -> setEnCoursSerie($episode->serieId);
         return $html;
 
 

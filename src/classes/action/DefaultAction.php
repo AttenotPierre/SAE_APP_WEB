@@ -13,7 +13,7 @@ class DefaultAction extends Action {
                 $renderer = new AudioListRenderer($playlist);
                 $html .= $renderer->render(2);
             } else{
-                $html = "<p class='center'>Auncune Playlist n'a été selectionné</p>";
+                $html = "<p class='center'>Auncune Serie n'a été selectionné</p>";
             }
         }else{
             $html = "<h1>Bienvenu sur NetVod !</h1>";
