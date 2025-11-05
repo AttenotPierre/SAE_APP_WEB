@@ -178,7 +178,8 @@ class Repository{
         $query = "SELECT id FROM User WHERE email = :email";
         $stmt = $this->pdo->prepare($query);
         $stmt->execute(['email' => $email]);
-        return (int)$stmt->fetch(PDO::FETCH_ASSOC);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return (int)$result['id'];
     }
 
     public function addSeriePref(int $serieId): void {
@@ -235,12 +236,11 @@ class Repository{
         return $catalogue;
     }
 
-    public function ajouterUnAvis( int $id_serie, int $note, string $commentaire): void {
-        $user_id = $this->getUserIdByEmail($_SESSION['email']);
+    public function ajouterUnAvis( int $id_user,int $id_serie, int $note, string $commentaire): void {
         $query = "INSERT INTO user2serie_note (id_user, id_serie, note, commentaire) VALUES (:id_user, :id_serie, :note, :commentaire)";
         $stmt = $this->pdo->prepare($query);
         $stmt->execute([
-            'id_user' => $user_id,
+            'id_user' => $id_user,
             'id_serie' => $id_serie,
             'note' => $note,
             'commentaire' => $commentaire
@@ -261,5 +261,15 @@ class Repository{
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         return $result['pseudo'] ?? '';
     }
+
+    public function getMOYNoteForSeries(int $id_serie): ?float {
+        $query = "SELECT AVG(note) as moyenne FROM user2serie_note WHERE id_serie = :id_serie";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute(['id_serie' => $id_serie]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['moyenne'] !== null ? (float)$result['moyenne'] : null;
+    }
+
+    
 
 }

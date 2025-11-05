@@ -10,7 +10,8 @@ class NoterAction {
             $idSerie = (int) $_POST['id_serie'];
             $comment = $_POST['comment'];
             $repo = Repository::getInstance();
-            $repo->ajouterUnAvis($idSerie, $note, $comment);
+            $id_user = $repo->getUserIdByEmail($_SESSION['email']);
+            $repo->ajouterUnAvis($id_user,$idSerie, $note, $comment);
             return "Merci d'avoir donné votre avis !";
         } else {
             return '';

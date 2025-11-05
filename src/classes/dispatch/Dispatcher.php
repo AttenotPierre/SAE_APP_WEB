@@ -34,6 +34,9 @@ class Dispatcher {
         case 'noter':
             $html = (new action\NoterAction())();
             break;
+        case 'displayAllNoteAction':
+            $html = (new action\DisplayAllNoteAction())();
+            break;
         case 'ajoutListeAction':
             // $html = (new action\AddListeAction())();
             break;
