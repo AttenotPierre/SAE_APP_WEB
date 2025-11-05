@@ -66,15 +66,6 @@ class Repository{
 
     }
 
-    public function IsUserActive(): bool {
-        $id = $this->getUserIdByEmail($_SESSION['user']);
-        $query = "SELECT is_active FROM User WHERE id = :id";
-        $stmt = $this->pdo->prepare($query);
-        $stmt->execute(['id' => $id]);
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        return ($result['is_active'] == 1);
-    }
-
     public function getCatalogue(): Catalogue {
         $query = "SELECT * FROM serie";
         $stmt = $this->pdo->query($query);
@@ -288,6 +279,45 @@ class Repository{
         return $result['moyenne'] !== null ? (float)$result['moyenne'] : null;
     }
 
+    public function InsertToken(string $token, string $mail) :void {
+        $user_id = $this->getUserIdByEmail($mail);
+        $query = "insert into user2token (id_user, token) values (:id_user, :token)";
+        $stmt = $this->pdo->prepare($query);
+        $hashedToken = password_hash($token, PASSWORD_DEFAULT);
+        $stmt->execute(['id_user' => $user_id, 'token' => $hashedToken]);
+    }
+
+    public function IsUserActive(string $mail): bool {
+        $id = $this->getUserIdByEmail($mail);
+        $query = "SELECT IsActive FROM User WHERE id = :id";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute(['id' => $id]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return ($result['IsActive'] == 1);
+    }
+
+    public function ActivateUser(): void {
+        $id = $this->getUserIdByEmail($_SESSION['user']);
+        $query = "UPDATE User SET IsActive = 1 WHERE id = :id";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute(['id' => $id]);
+    }
+
+    public function getTokenHash(): ?string {
+        $id_user = $this->getUserIdByEmail($_SESSION['user']);
+        $query = "SELECT token FROM user2token WHERE id_user = :id_user";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute(['id_user' => $id_user]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return (isset($result['token'])) ? $result['token']:null;
+    }
+
+    public function deleteToken(): void {
+        $id_user = $this->getUserIdByEmail($_SESSION['user']);
+        $query = "DELETE FROM user2token WHERE id_user = :id_user";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute(['id_user' => $id_user]);
+    }
     
 
 }

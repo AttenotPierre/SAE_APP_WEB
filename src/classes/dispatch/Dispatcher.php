@@ -2,6 +2,8 @@
 
 namespace iutnc\SAE_APP_WEB\Dispatch;
 use iutnc\SAE_APP_WEB\action;
+use iutnc\SAE_APP_WEB\exception\AuthException;
+use Random\RandomException;
 
 
 class Dispatcher {
@@ -13,6 +15,12 @@ class Dispatcher {
         }
         $this->action = $action;
     }
+
+    /**
+     * @throws RandomException
+     * @throws AuthException
+     * @throws \Exception
+     */
     public function run() : void{
         $html = '';
        switch ($this->action) {
@@ -54,6 +62,9 @@ class Dispatcher {
             break;
         case 'home':
             $html = (new action\ActionHome())();
+            break;
+        case 'activeAccount':
+            $html = (new action\ActivateAction())();
             break;
         default:
             $html = (new action\DefaultAction())();
