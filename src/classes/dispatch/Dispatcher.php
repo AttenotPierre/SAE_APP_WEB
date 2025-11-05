@@ -29,7 +29,7 @@ class Dispatcher {
             $html = (new action\DisplayCatalogAction())();
             break;
         case 'displayMyList':
-            $html = (new action\DisplayMyList)();
+            $html = (new action\DisplayMyListAction)();
             break;
         case 'noter':
             $html = (new action\NoterAction())();
@@ -38,7 +38,7 @@ class Dispatcher {
             $html = (new action\DisplayAllNoteAction())();
             break;
         case 'ajoutListeAction':
-            // $html = (new action\AddListeAction())();
+            $html = (new action\AddSeriesMyListAction())();
             break;
         case 'supprListeAction':
             // $html = (new action\SupprListeAction())();
