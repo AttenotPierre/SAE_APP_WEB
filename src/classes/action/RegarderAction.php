@@ -12,6 +12,10 @@ class RegarderAction {
         if (!isset($_GET['id_episode'])) {
             return "<p>Aucun épisode sélectionné.</p>";
         }
+        $id_episode = $_GET['id_episode'];
+        $repo = Repository::getInstance();
+        $episode = $repo->getEpisodeById($id_episode);
+        $repo->setEnCoursSerie($episode->serieId);
 
         if (!isset($_GET['id_serie'])) {
             return "<p>Aucune série sélectionnée.</p>";
@@ -20,7 +24,6 @@ class RegarderAction {
         $id_serie = (int) $_GET['id_serie'];
 
         $id_episode = (int) $_GET['id_episode'];
-        $repo = Repository::getInstance();
         $episode = $repo->getEpisodeById($id_episode);
 
         if (!$episode) {
