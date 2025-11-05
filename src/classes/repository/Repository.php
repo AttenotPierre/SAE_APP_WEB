@@ -66,6 +66,15 @@ class Repository{
 
     }
 
+    public function IsUserActive(): bool {
+        $id = $this->getUserIdByEmail($_SESSION['user']);
+        $query = "SELECT is_active FROM User WHERE id = :id";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute(['id' => $id]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return ($result['is_active'] == 1);
+    }
+
     public function getCatalogue(): Catalogue {
         $query = "SELECT * FROM serie";
         $stmt = $this->pdo->query($query);
@@ -234,6 +243,15 @@ class Repository{
             $catalogue->addSeries($series);
         }
         return $catalogue;
+    }
+
+    public function isSerieInPref(int $id_serie): bool {
+        $user_id = $this->getUserIdByEmail($_SESSION['user']);
+        $query = "SELECT COUNT(*) as count FROM user2serie_listepref WHERE id_user = :id_user AND id_serie = :id_serie";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute(['id_user' => $user_id, 'id_serie' => $id_serie]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return ($result['count'] > 0);
     }
 
     public function ajouterUnAvis( int $id_user,int $id_serie, int $note, string $commentaire): void {
