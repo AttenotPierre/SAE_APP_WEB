@@ -29,13 +29,13 @@ class Dispatcher {
             $html = (new action\DisplayCatalogAction())();
             break;
         case 'displayMyList':
-            $html = (new action\DisplayMyList)();
+            $html = (new action\DisplayMyListAction)();
             break;
         case 'commenter':
             // $html = (new action\CommenterAction())();
             break;
         case 'ajoutListeAction':
-            // $html = (new action\AddListeAction())();
+            $html = (new action\AddSeriesMyListAction())();
             break;
         case 'supprListeAction':
             // $html = (new action\SupprListeAction())();
