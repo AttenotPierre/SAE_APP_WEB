@@ -66,8 +66,8 @@ class RegisterAction extends Action{
             
                 
             $_SESSION['email'] = $mail;
-            $baseURL = "http://localhost/SAE_APP_WEB/ActivateAction.php";
-            $activationLink = $baseURL . "?token=" . $token;
+            $baseURL = "http://localhost/SAE_APP_WEB/index.php?action=activeAccount";
+            $activationLink = $baseURL . "&token=" . $token;
             return "<p class='center'>Inscription réussie pour l'utilisateur : $pseudo</p>
                     <p>Veuillez activer votre compte en cliquant sur le lien suivant :</p>
                     <a href='$activationLink'>$activationLink</a>";

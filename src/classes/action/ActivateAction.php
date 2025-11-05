@@ -12,8 +12,8 @@ class ActivateAction extends Action {
      */
     public function __invoke() : string {
         $html = "";
-        if ($_GET['token'] || empty($_GET['token']) !== null) {
-            return "<p>Lien d'activation invalide.</p>";
+        if (empty($_GET['token'])) {
+            return "<p>Lien d'activation manquant.</p>";
         }
         $token = $_GET['token'];
         $repo = Repository::getInstance();
@@ -22,6 +22,7 @@ class ActivateAction extends Action {
             return "<p>Lien d'activation invalide.</p>";
         }
         $repo->activateUser();
+        $repo->deleteToken();
         $html .= "<p>Votre compte a bien été activé ! Vous pouvez maintenant vous connecter.</p>";
 
         return $html;

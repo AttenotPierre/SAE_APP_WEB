@@ -2,8 +2,13 @@
 namespace iutnc\SAE_APP_WEB\action;
 use iutnc\SAE_APP_WEB\exception\AuthException;
 use iutnc\SAE_APP_WEB\auth\AuthProvider;
+use iutnc\SAE_APP_WEB\exception\TokenException;
+use iutnc\SAE_APP_WEB\repository\Repository;
 
 class AuthAction extends Action{
+    /**
+     * @throws \Exception
+     */
     public function __invoke(): string {
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
            return <<<HTML
@@ -29,13 +34,18 @@ class AuthAction extends Action{
             HTML;
         }else{
             $mail = $_POST['email'];
+            $repo = Repository::getInstance();
+            $UserActive = $repo->isUserActive($mail);
             if (filter_var($mail, FILTER_VALIDATE_EMAIL)) {
-                try{
+                try {
                     AuthProvider::signin($mail, $_POST['mdp']);
-                } catch(AuthException $e) {
+
+                } catch (AuthException $e) {
                     return "<p class='center'>email ou mot de passe incorrect</p><a href='?action=auth'>Se reconnecter</a>";
+                } catch (TokenException $e) {
+                    return "<p class='center'>Compte non-activé !</p>";
                 }
-            }else{
+            } else{
                 return "<p class='center'>email incorrect</p><a href='?action=auth'>Se reconnecter</a>";
             }
             $_SESSION['email'] = $mail;

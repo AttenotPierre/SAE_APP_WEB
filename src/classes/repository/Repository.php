@@ -287,18 +287,18 @@ class Repository{
         $stmt->execute(['id_user' => $user_id, 'token' => $hashedToken]);
     }
 
-    public function IsUserActive(): bool {
-        $id = $this->getUserIdByEmail($_SESSION['user']);
-        $query = "SELECT is_active FROM User WHERE id = :id";
+    public function IsUserActive(string $mail): bool {
+        $id = $this->getUserIdByEmail($mail);
+        $query = "SELECT IsActive FROM User WHERE id = :id";
         $stmt = $this->pdo->prepare($query);
         $stmt->execute(['id' => $id]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        return ($result['is_active'] == 1);
+        return ($result['IsActive'] == 1);
     }
 
     public function ActivateUser(): void {
         $id = $this->getUserIdByEmail($_SESSION['user']);
-        $query = "UPDATE User SET is_active = 1 WHERE id = :id";
+        $query = "UPDATE User SET IsActive = 1 WHERE id = :id";
         $stmt = $this->pdo->prepare($query);
         $stmt->execute(['id' => $id]);
     }
@@ -310,6 +310,13 @@ class Repository{
         $stmt->execute(['id_user' => $id_user]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         return (isset($result['token'])) ? $result['token']:null;
+    }
+
+    public function deleteToken(): void {
+        $id_user = $this->getUserIdByEmail($_SESSION['user']);
+        $query = "DELETE FROM user2token WHERE id_user = :id_user";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute(['id_user' => $id_user]);
     }
     
 
