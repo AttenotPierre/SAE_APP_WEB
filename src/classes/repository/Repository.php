@@ -202,7 +202,7 @@ class Repository{
         $stmt = $this->pdo->prepare($query);
         $stmt->execute(['id_user' => $user_id, 'id_serie' => $id_serie]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        return (string) $result;
+        return $result['state'] ?? 'non_defini';
     }
     public function setEnCoursSerie(int $id_serie): void {
         if ($this->getEtatSerie($id_serie) != 'en_cours') {
