@@ -31,8 +31,11 @@ class Dispatcher {
         case 'displayMyList':
             $html = (new action\DisplayMyListAction)();
             break;
-        case 'commenter':
-            // $html = (new action\CommenterAction())();
+        case 'noter':
+            $html = (new action\NoterAction())();
+            break;
+        case 'displayAllNoteAction':
+            $html = (new action\DisplayAllNoteAction())();
             break;
         case 'ajoutListeAction':
             $html = (new action\AddSeriesMyListAction())();
@@ -40,11 +43,17 @@ class Dispatcher {
         case 'supprListeAction':
             // $html = (new action\SupprListeAction())();
             break;
-        case 'lireAction':
-            // $html = (new action\LireAction())();
+        case 'DisplayEpisodeAction':
+            $html = (new action\DisplayEpisodeAction())();
+            break;
+        case 'RegarderAction':
+            $html = (new action\RegarderAction())();
             break;
         case 'displaySerie':
             $html = (new action\DisplaySerieAction())();
+            break;
+        case 'home':
+            $html = (new action\ActionHome())();
             break;
         default:
             $html = (new action\DefaultAction())();
@@ -68,7 +77,7 @@ class Dispatcher {
             <h1>NetVod</h1>
             <nav>
                 
-                    <a href="?action=default">Home</a>
+                    <a href="?action=home">Home</a>
                     <a href="?action=display-catalog">Catalogue</a>
                     <a href="?action=displayMyList">Ma Liste</a>
                     <a href="?action=auth">Authentification</a>

@@ -2,8 +2,16 @@
 namespace iutnc\SAE_APP_WEB\action;
 use iutnc\SAE_APP_WEB\exception\AuthException;
 use iutnc\SAE_APP_WEB\auth\AuthProvider;
+use Random\RandomException;
 
 class RegisterAction extends Action{
+
+    /**
+     * @throws RandomException
+     */
+    public function generateActivationToken(): string {
+        return bin2hex(random_bytes(16));
+    }
     public function __invoke(): string {
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
            return <<<HTML
@@ -32,10 +40,10 @@ class RegisterAction extends Action{
             HTML;
         }else{
             $pseudo = $_POST['pseudo'];
-            filter_var($pseudo, FILTER_SANITIZE_STRING); 
+
             $mail = $_POST['email'];
 
-            if (filter_var($mail, FILTER_VALIDATE_EMAIL)) {
+            if (filter_var($mail, FILTER_VALIDATE_EMAIL) && filter_var($pseudo, FILTER_SANITIZE_STRING)) {
                 try{
                     AuthProvider::register($mail,$_POST['mdp'],$pseudo);
                 } catch(AuthException $e) {
