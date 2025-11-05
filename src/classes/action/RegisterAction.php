@@ -2,6 +2,7 @@
 namespace iutnc\SAE_APP_WEB\action;
 use iutnc\SAE_APP_WEB\exception\AuthException;
 use iutnc\SAE_APP_WEB\auth\AuthProvider;
+use iutnc\SAE_APP_WEB\repository\Repository;
 use Random\RandomException;
 
 class RegisterAction extends Action{
@@ -12,6 +13,12 @@ class RegisterAction extends Action{
     public function generateActivationToken(): string {
         return bin2hex(random_bytes(16));
     }
+
+    /**
+     * @throws RandomException
+     * @throws AuthException
+     * @throws \Exception
+     */
     public function __invoke(): string {
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
            return <<<HTML
@@ -42,10 +49,13 @@ class RegisterAction extends Action{
             $pseudo = $_POST['pseudo'];
 
             $mail = $_POST['email'];
+            $token = $this->generateActivationToken();
+            $repo = Repository::getInstance();
 
             if (filter_var($mail, FILTER_VALIDATE_EMAIL) && filter_var($pseudo, FILTER_SANITIZE_STRING)) {
                 try{
                     AuthProvider::register($mail,$_POST['mdp'],$pseudo);
+                    $repo->InsertToken($token, $mail);
                 } catch(AuthException $e) {
                     return "<p class='center'>Erreur lors de l'inscription (Mot de passe Invalide ou utilisateur déjà existant)</p><a href='?action=auth'>Se reconnecter</a>";
                 }
@@ -56,7 +66,11 @@ class RegisterAction extends Action{
             
                 
             $_SESSION['email'] = $mail;
-            return "<p class='center'>Inscription réussie pour l'utilisateur : $pseudo</p>";
+            $baseURL = "http://localhost/SAE_APP_WEB/ActivateAction.php";
+            $activationLink = $baseURL . "?token=" . $token;
+            return "<p class='center'>Inscription réussie pour l'utilisateur : $pseudo</p>
+                    <p>Veuillez activer votre compte en cliquant sur le lien suivant :</p>
+                    <a href='$activationLink'>$activationLink</a>";
         }
     }
 
