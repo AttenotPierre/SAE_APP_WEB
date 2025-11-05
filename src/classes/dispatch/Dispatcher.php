@@ -41,7 +41,7 @@ class Dispatcher {
             $html = (new action\AddSeriesMyListAction())();
             break;
         case 'supprListeAction':
-            // $html = (new action\SupprListeAction())();
+            $html = (new action\DelSeriesMyListAction())();
             break;
         case 'DisplayEpisodeAction':
             $html = (new action\DisplayEpisodeAction())();
