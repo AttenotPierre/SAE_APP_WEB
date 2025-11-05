@@ -13,6 +13,12 @@ class RegarderAction {
             return "<p>Aucun épisode sélectionné.</p>";
         }
 
+        if (!isset($_GET['id_serie'])) {
+            return "<p>Aucune série sélectionnée.</p>";
+        }
+
+        $id_serie = (int) $_GET['id_serie'];
+
         $id_episode = (int) $_GET['id_episode'];
         $repo = Repository::getInstance();
         $episode = $repo->getEpisodeById($id_episode);
@@ -37,6 +43,19 @@ class RegarderAction {
         </video>
         HTML;
 
+        $html .= <<<HTML
+            <form method="POST" action="?action=noter">
+                            <label for="note">Note (1-5) :</label>
+                            <input type="number" id="note" name="note" min="1" max="5" required>
+                            <br>
+                            <label for="comment">Commentaire :</label>
+                            <br>
+                            <textarea id="comment" name="comment"></textarea>
+                            <br>
+                            <input type="hidden" name="id_serie" value="$id_serie">
+                            <input type="submit" value="Noter">
+            </form>
+        HTML;
         $html .= "<div><a href='?action=display-catalog'>⬅ Retour à la fiche</a></div>";
         $html .= "</div>";
         return $html;

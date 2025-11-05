@@ -235,4 +235,31 @@ class Repository{
         return $catalogue;
     }
 
+    public function ajouterUnAvis( int $id_serie, int $note, string $commentaire): void {
+        $user_id = $this->getUserIdByEmail($_SESSION['email']);
+        $query = "INSERT INTO user2serie_note (id_user, id_serie, note, commentaire) VALUES (:id_user, :id_serie, :note, :commentaire)";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute([
+            'id_user' => $user_id,
+            'id_serie' => $id_serie,
+            'note' => $note,
+            'commentaire' => $commentaire
+        ]);
+    }
+
+    public function getAvisByEpisodeId(int $id_serie): array {
+        $query = "SELECT u.pseudo, a.note, a.commentaire FROM user2serie_note a JOIN user u ON a.id_user = u.id WHERE a.id_serie = :id_serie";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute(['id_serie' => $id_serie]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getUserPseudo(int $id_user): string {
+        $query = "SELECT pseudo FROM User WHERE id = :id_user";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute(['id_user' => $id_user]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['pseudo'] ?? '';
+    }
+
 }
