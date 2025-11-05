@@ -18,6 +18,7 @@ class SerieRender implements Render{
             <div class="video-item">
                 <a href="?action=displaySerie&id_serie={$this->serie->id}"><h3>{$this->serie->titre}</h3></a>
                 <p>{$this->serie->description}</p>
+                <a href="?action=ajoutListeAction&id_serie={$this->serie->id}">LIKE</a>
             </div>
         HTML;
     }

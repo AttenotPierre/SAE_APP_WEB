@@ -2,20 +2,18 @@
 
 namespace iutnc\SAE_APP_WEB\action;
 use iutnc\SAE_APP_WEB\repository\Repository;
+use iutnc\SAE_APP_WEB\render\CatalogueRender;
 
-class DisplayMyList extends Action {
+class DisplayMyListAction extends Action {
 
     public function __invoke() : string {
         if (isset($_SESSION['user'])) {
             $email = $_SESSION['user'];
             $user_id = Repository::getInstance()->getUserIdByEmail($email);
             $liste = Repository::getInstance()->getSeriePref($user_id);
-            $html = "<div>";
-            foreach ($liste as $serie) {
-                $html .= "<p>" . htmlspecialchars($serie->titre) . "</p>"; 
-            }
-            $html .= "</div>";
-            return $html;
+            $renderer = new CatalogueRender($liste);
+            $rendu = $renderer->render();
+            return $rendu;
         } else {
             return "<p class='center'>Aucune série n'a été trouvé</p>";
         }

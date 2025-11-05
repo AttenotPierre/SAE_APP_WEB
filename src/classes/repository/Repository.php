@@ -178,7 +178,8 @@ class Repository{
         $query = "SELECT id FROM User WHERE email = :email";
         $stmt = $this->pdo->prepare($query);
         $stmt->execute(['email' => $email]);
-        return (int)$stmt->fetch(PDO::FETCH_ASSOC);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return (int)$result['id'];
     }
 
     public function addSeriePref(int $serieId): void {
@@ -201,15 +202,115 @@ class Repository{
         $stmt = $this->pdo->prepare($query);
         $stmt->execute(['id_user' => $user_id, 'id_serie' => $id_serie]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        return (string) $result;
+        return $result['state'] ?? 'non_defini';
     }
     public function setEnCoursSerie(int $id_serie): void {
         if ($this->getEtatSerie($id_serie) != 'en_cours') {
             $user_id = $this->getUserIdByEmail($_SESSION['user']);
-            $query = "UPDATE user2serie_state SET state = 'en_cours' WHERE id_user = :id_user AND id_serie = :id_serie";
+            $query = "insert into user2serie_state (id_user, id_serie, state) values (:id_user, :id_serie, 'en_cours')";
             $stmt = $this->pdo->prepare($query);
             $stmt->execute(['id_user' => $user_id, 'id_serie' => $id_serie]);
         }
     }
+
+    public function getEnCoursSeries(): Catalogue {
+        $user_id = $this->getUserIdByEmail($_SESSION['user']);
+        $query = "SELECT * from serie inner join user2serie_state on serie.id = user2serie_state.id_serie where user2serie_state.id_user = :id_user and user2serie_state.state = 'en_cours'";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute(['id_user' => $user_id]);
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $catalogue = new Catalogue();
+        foreach ($result as $row) {
+            $series = new Series(
+                (int)$row['id'],
+                $row['titre'],
+                $row['descriptif'],
+                $row['img'],
+                (int)$row['annee'],
+                $row['date_ajout'],
+                $row['theme']?? "Non défini",
+                $row['public_cible'] ?? "Non défini"
+            );
+            $catalogue->addSeries($series);
+        }
+        return $catalogue;
+    }
+
+    public function isSerieInPref(int $id_serie): bool {
+        $user_id = $this->getUserIdByEmail($_SESSION['user']);
+        $query = "SELECT COUNT(*) as count FROM user2serie_listepref WHERE id_user = :id_user AND id_serie = :id_serie";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute(['id_user' => $user_id, 'id_serie' => $id_serie]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return ($result['count'] > 0);
+    }
+
+    public function ajouterUnAvis( int $id_user,int $id_serie, int $note, string $commentaire): void {
+        $query = "INSERT INTO user2serie_note (id_user, id_serie, note, commentaire) VALUES (:id_user, :id_serie, :note, :commentaire)";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute([
+            'id_user' => $id_user,
+            'id_serie' => $id_serie,
+            'note' => $note,
+            'commentaire' => $commentaire
+        ]);
+    }
+
+    public function getAvisByEpisodeId(int $id_serie): array {
+        $query = "SELECT u.pseudo, a.note, a.commentaire FROM user2serie_note a JOIN user u ON a.id_user = u.id WHERE a.id_serie = :id_serie";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute(['id_serie' => $id_serie]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getUserPseudo(int $id_user): string {
+        $query = "SELECT pseudo FROM User WHERE id = :id_user";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute(['id_user' => $id_user]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['pseudo'] ?? '';
+    }
+
+    public function getMOYNoteForSeries(int $id_serie): ?float {
+        $query = "SELECT AVG(note) as moyenne FROM user2serie_note WHERE id_serie = :id_serie";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute(['id_serie' => $id_serie]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['moyenne'] !== null ? (float)$result['moyenne'] : null;
+    }
+
+    public function InsertToken(string $token, string $mail) :void {
+        $user_id = $this->getUserIdByEmail($mail);
+        $query = "insert into user2token (id_user, token) values (:id_user, :token)";
+        $stmt = $this->pdo->prepare($query);
+        $hashedToken = password_hash($token, PASSWORD_DEFAULT);
+        $stmt->execute(['id_user' => $user_id, 'token' => $hashedToken]);
+    }
+
+    public function IsUserActive(): bool {
+        $id = $this->getUserIdByEmail($_SESSION['user']);
+        $query = "SELECT is_active FROM User WHERE id = :id";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute(['id' => $id]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return ($result['is_active'] == 1);
+    }
+
+    public function ActivateUser(): void {
+        $id = $this->getUserIdByEmail($_SESSION['user']);
+        $query = "UPDATE User SET is_active = 1 WHERE id = :id";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute(['id' => $id]);
+    }
+
+    public function getTokenHash(): ?string {
+        $id_user = $this->getUserIdByEmail($_SESSION['user']);
+        $query = "SELECT token FROM user2token WHERE id_user = :id_user";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute(['id_user' => $id_user]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return (isset($result['token'])) ? $result['token']:null;
+    }
+    
 
 }

@@ -8,14 +8,14 @@ use iutnc\SAE_APP_WEB\render\CatalogueRender;
 class DisplayCatalogAction extends Action {
 
     public function __invoke() : string {
-        // if (isset($_SESSION['user'])) {
+        if (isset($_SESSION['email'])) {
             $catalogue = Repository::getInstance()->getCatalogue();
             $renderer = new CatalogueRender($catalogue);
             $rendu = $renderer->render();
             return $rendu;
-        // } else {
-        //     return "<p>Aucune série disponible. Veuillez vous connectez ou créer un compte.</p>";
-        // }
+        } else {
+            return "<p>Aucune série disponible. Veuillez vous connectez ou créer un compte.</p>";
+        }
     }
 
 }
