@@ -15,12 +15,12 @@ class CatalogueRender implements Render{
     public function render (): string{
         $html = "<div class='catalogue'>\n";
         $html .= "<h2>Catalogue NetVOD</h2>\n";
-        $html .= "<ul>\n";
+        $html .= "<div class='catalog-container'>\n"; 
         foreach ($this->catalogue->series as $serie) {
             $SerieRender = new SerieRender($serie);
-            $html .= "<li>" . $SerieRender->render() ."</li>\n";
+            $html .= $SerieRender->render();
         }
-        $html .= "</ul>\n";
+        $html .= "</div>\n"; 
         $html .= "</div>\n";
 
         return $html;

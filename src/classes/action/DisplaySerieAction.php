@@ -28,10 +28,13 @@ class DisplaySerieAction extends Action{
         foreach ($avis as $unAvis) {
             $listeAvis .= "<li>{$unAvis['pseudo']} - Note : {$unAvis['note']} - Commentaire : {$unAvis['commentaire']}</li>";
         }
+
+        $html .= "<div class='serie-container'>";
         foreach ($serie->episodes as $episode) {
             $episodeRender = new SerieEpisodeRender($episode);
             $html .= $episodeRender->render();
         }
+        $html .= "</div>";
 
         $html .= "</div>\n";
         $html .= "<div class='avis'>\n";

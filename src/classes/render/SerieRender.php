@@ -4,6 +4,8 @@ namespace iutnc\SAE_APP_WEB\render;
 
 use iutnc\SAE_APP_WEB\video\Episode;
 use iutnc\SAE_APP_WEB\video\Series;
+use iutnc\SAE_APP_WEB\repository\Repository;
+
 
 class SerieRender implements Render{
 
@@ -14,11 +16,18 @@ class SerieRender implements Render{
     }
 
     public function render():string {
-        return <<< HTML
-            <div class="video-item">
-                <a href="?action=displaySerie&id_serie={$this->serie->id}"><h3>{$this->serie->titre}</h3></a>
-                <p>{$this->serie->description}</p>
-            </div>
+        $titre = htmlspecialchars($this->serie->titre);
+        $image = htmlspecialchars($this->serie->img); 
+        $moyenne = Repository::getInstance()->getMOYNoteForSeries((int)$this->serie->id);
+
+        return <<<HTML
+        <div class="serie-card">
+            <a href="?action=displaySerie&id_serie={$this->serie->id}">
+                <img src="img/$image" alt="$titre" class="serie-image">
+            </a>
+            <h3 class="serie-title">$titre</h3>
+            <p> ⭐ $moyenne </p>
+        </div>
         HTML;
     }
 

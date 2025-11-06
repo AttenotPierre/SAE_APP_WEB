@@ -63,34 +63,52 @@ class Dispatcher {
     }
 
     private function renderPage(string $content): void {
+        if (isset($_SESSION['user'])) {
+            $email = filter_var($_SESSION['email'], FILTER_SANITIZE_EMAIL);
+            $pseudo = 
+            $userContent = "<span>Connecté : $email</span> <a href='?action=deconnect' class='btn-login'>Déconnexion</a>";
+        } else {
+            $userContent = '<a href="?action=auth" class="btn-login">Connexion</a>
+                            <a href="?action=register" class="btn-primary">Inscription</a>';
+        }
+
         echo <<<FIN
         <!DOCTYPE html>
-        <html lang="en">
+        <html lang="fr">
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>NetVod</title>
             <link rel="stylesheet" href="css/style.css">
-            <title>Deefy App</title>
         </head>
         <body>
-            <header class="container">
-            <h1>NetVod</h1>
-            <nav>
-                
-                    <a href="?action=home">Home</a>
-                    <a href="?action=display-catalog">Catalogue</a>
-                    <a href="?action=displayMyList">Ma Liste</a>
-                    <a href="?action=auth">Authentification</a>
-                    <a href="?action=register">Inscription</a>
-                    <a href="?action=deconnect">Déconnexion</a>
-                
-            </nav>    
+            <header class="header">
+                <div class="container">
+                    <div class="header-content">
+                        <div class="header-left">
+                            <a href="?action=home" class="logo">NETVOD</a>
+                            <nav class="nav">
+                                <a href="?action=home" class="nav-link">Accueil</a>
+                                <a href="?action=display-catalog" class="nav-link">Catalogue</a>
+                                <a href="?action=displayMyList" class="nav-link">Ma Liste</a>
+                            </nav>
+                        </div>
+
+                        <div class="header-actions">
+                            $userContent
+                        </div>
+                    </div>
+                </div>    
             </header>
-            $content
+
+            <main class="main-container">
+                $content
+            </main>
         </body>
-        </html> 
+        </html>
         FIN;
     }
+
 
 
 }
