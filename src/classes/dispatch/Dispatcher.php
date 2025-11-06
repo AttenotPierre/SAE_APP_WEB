@@ -69,6 +69,9 @@ class Dispatcher {
         case 'search':
             $html = (new action\SearchAction())();
             break;
+        case 'DisplaySerieFiniAction':
+            $html = (new action\DisplayListSerieFiniAction())();
+            break;
         default:
             $html = (new action\DefaultAction())();
             break;
@@ -94,6 +97,7 @@ class Dispatcher {
                     <a href="?action=home">Home</a>
                     <a href="?action=display-catalog">Catalogue</a>
                     <a href="?action=displayMyList">Ma Liste</a>
+                    <a href="?action=DisplaySerieFiniAction">Séries Terminées</a>
                     <a href="?action=auth">Authentification</a>
                     <a href="?action=register">Inscription</a>
                     <a href="?action=deconnect">Déconnexion</a>

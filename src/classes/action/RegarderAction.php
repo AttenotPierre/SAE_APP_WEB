@@ -16,6 +16,8 @@ class RegarderAction {
         $repo = Repository::getInstance();
         $episode = $repo->getEpisodeById($id_episode);
         $repo->setEnCoursSerie($episode->serieId);
+        $repo->setDeja_VisualiseEpisode($id_episode);
+        $repo->setTermineeSerie($episode->serieId);
 
         if (!isset($_GET['id_serie'])) {
             return "<p>Aucune série sélectionnée.</p>";
