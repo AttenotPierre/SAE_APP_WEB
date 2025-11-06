@@ -318,6 +318,29 @@ class Repository{
         $stmt = $this->pdo->prepare($query);
         $stmt->execute(['id_user' => $id_user]);
     }
+
+    public function rechercheCatalogue(string $motclef): Catalogue {
+        $query = "SELECT * FROM serie WHERE lower(titre) LIKE lower(:motclef) OR descriptif LIKE lower(:motclef)";
+        $stmt = $this->pdo->prepare($query);
+        $likeMotClef = '%' . $motclef . '%';
+        $stmt->execute(['motclef' => $likeMotClef]);
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $catalogue = new Catalogue();
+        foreach ($result as $row) {
+            $series = new Series(
+                (int)$row['id'],
+                $row['titre'],
+                $row['descriptif'],
+                $row['img'],
+                (int)$row['annee'],
+                $row['date_ajout'],
+                $row['theme']?? "Non défini",
+                $row['public_cible'] ?? "Non défini"
+            );
+            $catalogue->addSeries($series);
+        }
+        return $catalogue;
+    }
     
 
 }

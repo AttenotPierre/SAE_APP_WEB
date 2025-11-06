@@ -66,6 +66,9 @@ class Dispatcher {
         case 'activeAccount':
             $html = (new action\ActivateAction())();
             break;
+        case 'search':
+            $html = (new action\SearchAction())();
+            break;
         default:
             $html = (new action\DefaultAction())();
             break;
