@@ -12,17 +12,12 @@ class DisplaySerieAction extends Action{
         $pseudo = Repository::getInstance()->getUserPseudo($id_user);
         $id_serie = $_GET['id_serie'];
         $serie = Repository::getInstance()->getEpisodesBySerieId($id_serie);
-        $html = "<div class='serie'>\n";
-        $html .= "<h2>{$serie->titre}</h2>\n";
-
         $moyenne = Repository::getInstance()->getMOYNoteForSeries((int)$id_serie);
-        if ($moyenne === null) {
-            $html .= "<p>Aucune note disponible pour cette série.</p>\n";
-        } else {
-            $html .= "<p>Note moyenne : " . number_format($moyenne, 2) . "</p>\n";
-        }
-        $html .= "<a href='?action=displayAllNoteAction&id_series={$id_serie}'>Voir les commentaires</a>\n";
         
+        $html = "<div class='serie'>\n";
+        $html .= "<h2>{$serie->titre} ⭐$moyenne</h2>\n";
+        $html .= "<a href='?action=displayAllNoteAction&id_series={$id_serie}'>Voir les commentaires</a>\n";
+
         $avis = Repository::getInstance()->getAvisByEpisodeId($id_serie);
         $listeAvis = "";
         foreach ($avis as $unAvis) {

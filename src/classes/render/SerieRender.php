@@ -36,8 +36,8 @@ class SerieRender implements Render{
             <a href="?action=displaySerie&id_serie={$this->serie->id}">
                 <img src="img/$image" alt="$titre" class="serie-image">
             </a>
-            <h3 class="serie-title">$titre</h3>
-            <p> ⭐ $moyenne </p>
+            <h3 class="serie-title">$titre ⭐ $moyenne</h3>
+            
             $favHtml
         </div>
         HTML;

@@ -6,6 +6,8 @@ use iutnc\SAE_APP_WEB\render\CatalogueRender;
 use iutnc\SAE_APP_WEB\repository\Repository;
 use iutnc\SAE_APP_WEB\render\SerieRender;
 use iutnc\SAE_APP_WEB\video\Catalogue;
+use iutnc\SAE_APP_WEB\render\CatalogueRenderEnCours;
+use iutnc\SAE_APP_WEB\render\CatalogueRenderMaListe;
 
 class ActionHome {
     public function __invoke(): string {
@@ -28,8 +30,11 @@ class ActionHome {
                     </section>
                 HTML;
             $catalogue = Repository::getInstance()->getEnCoursSeries();
-            $render = new CatalogueRender($catalogue);
+            $catalogue2 = Repository::getInstance()->getSeriePref(Repository::getInstance()->getUserIdByEmail($_SESSION['user']));
+            $render = new CatalogueRenderEnCours($catalogue);
+            $render2 = new CatalogueRenderMaListe($catalogue2);
             $html.= $render->render();
+            $html.= $render2->render();
             return $html;
         }
     }
