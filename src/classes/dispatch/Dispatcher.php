@@ -2,6 +2,8 @@
 
 namespace iutnc\SAE_APP_WEB\Dispatch;
 use iutnc\SAE_APP_WEB\action;
+use iutnc\SAE_APP_WEB\exception\AuthException;
+use Random\RandomException;
 
 
 class Dispatcher {
@@ -13,6 +15,12 @@ class Dispatcher {
         }
         $this->action = $action;
     }
+
+    /**
+     * @throws RandomException
+     * @throws AuthException
+     * @throws \Exception
+     */
     public function run() : void{
         $html = '';
        switch ($this->action) {
@@ -29,7 +37,7 @@ class Dispatcher {
             $html = (new action\DisplayCatalogAction())();
             break;
         case 'displayMyList':
-            $html = (new action\DisplayMyList)();
+            $html = (new action\DisplayMyListAction)();
             break;
         case 'noter':
             $html = (new action\NoterAction())();
@@ -38,10 +46,10 @@ class Dispatcher {
             $html = (new action\DisplayAllNoteAction())();
             break;
         case 'ajoutListeAction':
-            // $html = (new action\AddListeAction())();
+            $html = (new action\AddSeriesMyListAction())();
             break;
         case 'supprListeAction':
-            // $html = (new action\SupprListeAction())();
+            $html = (new action\DelSeriesMyListAction())();
             break;
         case 'DisplayEpisodeAction':
             $html = (new action\DisplayEpisodeAction())();
@@ -54,6 +62,15 @@ class Dispatcher {
             break;
         case 'home':
             $html = (new action\ActionHome())();
+            break;
+        case 'activeAccount':
+            $html = (new action\ActivateAction())();
+            break;
+        case 'search':
+            $html = (new action\SearchAction())();
+            break;
+        case 'DisplaySerieFiniAction':
+            $html = (new action\DisplayListSerieFiniAction())();
             break;
         default:
             $html = (new action\DefaultAction())();
@@ -99,6 +116,7 @@ class Dispatcher {
                         </div>
                     </div>
                 </div>    
+
             </header>
 
             <main class="main-container">

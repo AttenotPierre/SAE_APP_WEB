@@ -6,7 +6,6 @@ use iutnc\SAE_APP_WEB\video\Episode;
 use iutnc\SAE_APP_WEB\video\Series;
 use iutnc\SAE_APP_WEB\repository\Repository;
 
-
 class SerieRender implements Render{
 
     protected Series $serie;  
@@ -20,6 +19,18 @@ class SerieRender implements Render{
         $image = htmlspecialchars($this->serie->img); 
         $moyenne = Repository::getInstance()->getMOYNoteForSeries((int)$this->serie->id);
 
+        
+
+
+        $favHtml = '';
+
+        if (Repository::getInstance()->isSerieInPref($this->serie->id)){
+            $favHtml = '<a href="?action=supprListeAction&id_serie=' .$this->serie->id .'">FAVORIS</a>';
+        }
+        else {
+            $favHtml = '<a href="?action=ajoutListeAction&id_serie=' . $this->serie->id.'">FAVORIS</a>';
+        }
+
         return <<<HTML
         <div class="serie-card">
             <a href="?action=displaySerie&id_serie={$this->serie->id}">
@@ -27,6 +38,7 @@ class SerieRender implements Render{
             </a>
             <h3 class="serie-title">$titre</h3>
             <p> ⭐ $moyenne </p>
+            $favHtml
         </div>
         HTML;
     }

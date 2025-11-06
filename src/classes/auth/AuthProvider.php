@@ -2,17 +2,30 @@
 namespace iutnc\SAE_APP_WEB\Auth;
 
 use iutnc\SAE_APP_WEB\exception\AuthException;
+use iutnc\SAE_APP_WEB\exception\TokenException;
 use iutnc\SAE_APP_WEB\repository\Repository;
 
 class AuthProvider {
 
-    public static function signin(string $email,string $passwd2check): void {
+    /**
+     * @throws AuthException
+     * @throws TokenException
+     * @throws \Exception
+     */
+    public static function signin(string $email, string $passwd2check): void {
         $hash = Repository::getInstance()->getHashUser($email);
+        $UserActive = Repository::getInstance()->isUserActive($email);
         if (!password_verify($passwd2check, $hash))
             throw new AuthException("MOT DE PASSE OU EMAIL INCORRECTE");
+        if (!$UserActive)
+            throw new TokenException("COMPTE NON ACTIVÉ");
         $_SESSION['user'] = $email;
     }
-    public static function register(string $email,string $pass, string $pseudo): void {
+
+    /**
+     * @throws AuthException
+     */
+    public static function register(string $email, string $pass, string $pseudo): void {
         if (! filter_var($email, FILTER_VALIDATE_EMAIL)) {
             throw new AuthException("REGISTER ERROR");
         }
