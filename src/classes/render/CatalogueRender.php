@@ -14,12 +14,33 @@ class CatalogueRender implements Render{
 
     public function render (): string{
         $q = htmlspecialchars((string)($_GET['q'] ?? ''), ENT_QUOTES, 'UTF-8');
+        $tri = htmlspecialchars((string)($_GET['tri'] ?? 'default'), ENT_QUOTES, 'UTF-8');
         $html = "<div class='catalogue'>\n";
         $html .= "<h2>Catalogue NetVOD</h2>\n";
         $html .= "<form method='get' action='index.php' class='catalog-search'>\n"; // Correction de l'action
         $html .= "<input type='hidden' name='action' value='search' />\n";
         $html .= "<input type='text' name='q' placeholder='Rechercher...' value='{$q}' />\n";
         $html .= "<button type='submit'>Rechercher</button>\n";
+        $html .= "</form>\n";
+
+
+        $html .= "<form method='get' action='index.php' class='catalog-sort'>\n"; // Correction de l'action
+        $html .= "<input type='hidden' name='action' value='display-catalog' />\n";
+        $html .= "<label for='tri'>Trier par :</label>\n";
+        $html .= "<select name='tri' id='tri' onchange='this.form.submit()'>\n";
+        $options = [
+            'default' => 'Par défaut',
+            'date_ajout' => 'Date d\'ajout',
+            'name' => 'Nom (A-Z)',
+            'annee' => 'Année de sortie',
+            'nb_episodes' => 'Nombre d\'épisodes',
+            'note' => 'Note moyenne'
+        ];
+        foreach ($options as $value => $label) {
+            $selected = ($tri === $value) ? 'selected' : '';
+            $html .= "<option value='{$value}' {$selected}>{$label}</option>\n";
+        }
+        $html .= "</select>\n";
         $html .= "</form>\n";
         foreach ($this->catalogue->series as $serie) {
             $SerieRender = new SerieRender($serie);
