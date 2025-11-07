@@ -421,7 +421,29 @@ class Repository{
         return $catalogue;
     }
 
-    public function getCatalogueTriTitre(): Catalogue {
+
+    public function getCatalogueOrderedByDate(): Catalogue {
+        $query = "SELECT * FROM serie ORDER BY date_ajout DESC";
+        $stmt = $this->pdo->query($query);
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $catalogue = new Catalogue();
+        foreach ($result as $row) {
+            $series = new Series(
+                (int)$row['id'],
+                $row['titre'],
+                $row['descriptif'],
+                $row['img'],
+                (int)$row['annee'],
+                $row['date_ajout'],
+                $row['theme']?? "Non défini",
+                $row['public_cible'] ?? "Non défini"
+            );
+            $catalogue->addSeries($series);
+        }
+        return $catalogue;
+    }
+
+    public function getCatalogueOrderedByTitle(): Catalogue {
         $query = "SELECT * FROM serie ORDER BY titre ASC";
         $stmt = $this->pdo->query($query);
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -448,6 +470,77 @@ class Repository{
         $stmt->execute(['serie_id' => $serieId]);
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $result;
+    }
+
+    public function getCatalogueOrderedByYear(): Catalogue {
+        $query = "SELECT * FROM serie ORDER BY annee DESC";
+        $stmt = $this->pdo->query($query);
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $catalogue = new Catalogue();
+        foreach ($result as $row) {
+            $series = new Series(
+                (int)$row['id'],
+                $row['titre'],
+                $row['descriptif'],
+                $row['img'],
+                (int)$row['annee'],
+                $row['date_ajout'],
+                $row['theme']?? "Non défini",
+                $row['public_cible'] ?? "Non défini"
+            );
+            $catalogue->addSeries($series);
+        }
+        return $catalogue;
+    }
+
+    public function getCatalogueOrderedByNbEpisodes(): Catalogue {
+        $query = "SELECT s.*, COUNT(e.id) as nb_episodes 
+                  FROM serie s
+                  LEFT JOIN episode e ON s.id = e.serie_id
+                  GROUP BY s.id
+                  ORDER BY nb_episodes DESC";
+        $stmt = $this->pdo->query($query);
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $catalogue = new Catalogue();
+        foreach ($result as $row) {
+            $series = new Series(
+                (int)$row['id'],
+                $row['titre'],
+                $row['descriptif'],
+                $row['img'],
+                (int)$row['annee'],
+                $row['date_ajout'],
+                $row['theme']?? "Non défini",
+                $row['public_cible'] ?? "Non défini"
+            );
+            $catalogue->addSeries($series);
+        }
+        return $catalogue;
+    }
+
+    public function getCatalogueOrderedByMoyenne(): Catalogue {
+        $query = "SELECT s.*, AVG(n.note) as moyenne_note 
+                  FROM serie s
+                  LEFT JOIN user2serie_note n ON s.id = n.id_serie
+                  GROUP BY s.id
+                  ORDER BY avg(n.note) is NULL ASC, avg(n.note) ASC";
+        $stmt = $this->pdo->query($query);
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $catalogue = new Catalogue();
+        foreach ($result as $row) {
+            $series = new Series(
+                (int)$row['id'],
+                $row['titre'],
+                $row['descriptif'],
+                $row['img'],
+                (int)$row['annee'],
+                $row['date_ajout'],
+                $row['theme']?? "Non défini",
+                $row['public_cible'] ?? "Non défini"
+            );
+            $catalogue->addSeries($series);
+        }
+        return $catalogue;
     }
     
 
