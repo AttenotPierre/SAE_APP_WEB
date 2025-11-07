@@ -19,6 +19,7 @@ class Episode
         int $duree,
         string $chemin,
         int $serieId
+        
     ) {
         $this->id = $id;
         $this->numero = $numero;
@@ -27,6 +28,7 @@ class Episode
         $this->duree = $duree;
         $this->chemin = $chemin;
         $this->serieId = $serieId;
+        
     }
 
     public function __get($name)

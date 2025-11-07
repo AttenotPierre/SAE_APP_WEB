@@ -213,9 +213,79 @@ class Repository{
         }
     }
 
+    public function getEtatEpisode(int $id_episode): string {
+        $user_id = $this->getUserIdByEmail($_SESSION['user']);
+        $query = "SELECT state FROM user2episode_state WHERE id_user = :id_user AND id_ep = :id_ep";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute(['id_user' => $user_id, 'id_ep' => $id_episode]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['state'] ?? 'non_defini';
+    }
+
+    public function setDeja_VisualiseEpisode(int $id_episode): void {
+        if ($this->getEtatEpisode($id_episode) != 'deja_visualise') {
+            $user_id = $this->getUserIdByEmail($_SESSION['user']);
+            $query = "insert into user2episode_state (id_user, id_ep, state) values (:id_user, :id_ep, 'deja_visualise')";
+            $stmt = $this->pdo->prepare($query);
+            $stmt->execute(['id_user' => $user_id, 'id_ep' => $id_episode]);
+        }
+    }
+
+    public function isAllEpisodeDeja_Visualise(int $id_serie): bool {
+        $user_id = $this->getUserIdByEmail($_SESSION['user']);
+        $query = "SELECT COUNT(*) as total_episodes FROM episode WHERE serie_id = :id_serie";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute(['id_serie' => $id_serie]);
+        $totalEpisodesResult = $stmt->fetch(PDO::FETCH_ASSOC);
+        $totalEpisodes = (int)$totalEpisodesResult['total_episodes'];
+
+        $query = "SELECT COUNT(*) as viewed_episodes 
+                  FROM episode e
+                  JOIN user2episode_state ues ON e.id = ues.id_ep
+                  WHERE e.serie_id = :id_serie AND ues.id_user = :id_user AND ues.state = 'deja_visualise'";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute(['id_serie' => $id_serie, 'id_user' => $user_id]);
+        $viewedEpisodesResult = $stmt->fetch(PDO::FETCH_ASSOC);
+        $viewedEpisodes = (int)$viewedEpisodesResult['viewed_episodes'];
+
+        return $totalEpisodes > 0 && $totalEpisodes === $viewedEpisodes;
+    }
+
+    public function setTermineeSerie(int $id_serie): void {
+        if ($this->getEtatSerie($id_serie) != 'terminee' && $this->isAllEpisodeDeja_Visualise($id_serie)) {
+            $user_id = $this->getUserIdByEmail($_SESSION['user']);
+            $query = "UPDATE user2serie_state SET state = 'terminee' WHERE id_user = :id_user AND id_serie = :id_serie";
+            $stmt = $this->pdo->prepare($query);
+            $stmt->execute(['id_user' => $user_id, 'id_serie' => $id_serie]);
+        }
+    }
+
     public function getEnCoursSeries(): Catalogue {
         $user_id = $this->getUserIdByEmail($_SESSION['user']);
         $query = "SELECT * from serie inner join user2serie_state on serie.id = user2serie_state.id_serie where user2serie_state.id_user = :id_user and user2serie_state.state = 'en_cours'";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute(['id_user' => $user_id]);
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $catalogue = new Catalogue();
+        foreach ($result as $row) {
+            $series = new Series(
+                (int)$row['id'],
+                $row['titre'],
+                $row['descriptif'],
+                $row['img'],
+                (int)$row['annee'],
+                $row['date_ajout'],
+                $row['theme']?? "Non défini",
+                $row['public_cible'] ?? "Non défini"
+            );
+            $catalogue->addSeries($series);
+        }
+        return $catalogue;
+    }
+
+    public function getTermineeSeries(): Catalogue {
+        $user_id = $this->getUserIdByEmail($_SESSION['user']);
+        $query = "SELECT * from serie inner join user2serie_state on serie.id = user2serie_state.id_serie where user2serie_state.id_user = :id_user and user2serie_state.state = 'terminee'";
         $stmt = $this->pdo->prepare($query);
         $stmt->execute(['id_user' => $user_id]);
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -279,6 +349,15 @@ class Repository{
         return $result['moyenne'] !== null ? (float)$result['moyenne'] : null;
     }
 
+    public function getimagebyepisode(int $id_episode): ?string {
+        $query = "SELECT img FROM episode WHERE id = :id_episode";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute(['id_episode' => $id_episode]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['img'] ?? null;
+    }
+
+
     public function InsertToken(string $token, string $mail) :void {
         $user_id = $this->getUserIdByEmail($mail);
         $query = "insert into user2token (id_user, token) values (:id_user, :token)";
@@ -317,6 +396,29 @@ class Repository{
         $query = "DELETE FROM user2token WHERE id_user = :id_user";
         $stmt = $this->pdo->prepare($query);
         $stmt->execute(['id_user' => $id_user]);
+    }
+
+    public function rechercheCatalogue(string $motclef): Catalogue {
+        $query = "SELECT * FROM serie WHERE lower(titre) LIKE lower(:motclef) OR descriptif LIKE lower(:motclef)";
+        $stmt = $this->pdo->prepare($query);
+        $likeMotClef = '%' . $motclef . '%';
+        $stmt->execute(['motclef' => $likeMotClef]);
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $catalogue = new Catalogue();
+        foreach ($result as $row) {
+            $series = new Series(
+                (int)$row['id'],
+                $row['titre'],
+                $row['descriptif'],
+                $row['img'],
+                (int)$row['annee'],
+                $row['date_ajout'],
+                $row['theme']?? "Non défini",
+                $row['public_cible'] ?? "Non défini"
+            );
+            $catalogue->addSeries($series);
+        }
+        return $catalogue;
     }
     
 

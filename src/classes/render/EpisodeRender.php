@@ -4,6 +4,8 @@ namespace iutnc\SAE_APP_WEB\render;
 
 use iutnc\SAE_APP_WEB\video\Episode;
 use iutnc\SAE_APP_WEB\video\Series;
+use iutnc\SAE_APP_WEB\repository\Repository;
+
 
 class EpisodeRender implements Render{
 
@@ -14,15 +16,22 @@ class EpisodeRender implements Render{
     }
 
     public function render():string {
+        $image = Repository::getInstance()->getimagebyepisode((int)$this->episode->id);
+        $titre = htmlspecialchars($this->episode->titre);
+        $resume = htmlspecialchars($this->episode->resume);
+        $duree = htmlspecialchars($this->episode->duree);
+        $id_episode = $this->episode->id;
+        $id_serie = $this->episode->serieId;
+        return <<<HTML
         
-            return <<< HTML
-            <div class="Description-episode">
-                <h3><strong>Titre :</strong> {$this->episode->titre}</h3>
-                <p><strong>Résumé :</strong> {$this->episode->resume}</p>
-                <p><strong>Durée:</strong> {$this->episode->duree} secondes</p>
-            </div>
-            HTML;
+        <div class="serie-card">
+            <a href='?action=RegarderAction&id_episode=$id_episode&id_serie=$id_serie'>
+                <img src="$image" alt="$titre" class="serie-image">
+            </a>
+            <h3 class="serie-title">$titre  $duree s</h3>
+            <p> $resume </p>
+        </div>
+        HTML;
               
-        
     }
 }
