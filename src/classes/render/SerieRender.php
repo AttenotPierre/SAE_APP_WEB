@@ -15,6 +15,12 @@ class SerieRender implements Render{
     }
 
     public function render():string {
+        $titre = htmlspecialchars($this->serie->titre);
+        $image = htmlspecialchars($this->serie->img); 
+        $moyenne = Repository::getInstance()->getMOYNoteForSeries((int)$this->serie->id);
+
+        
+
 
         $favHtml = '';
 
@@ -25,12 +31,15 @@ class SerieRender implements Render{
             $favHtml = '<a href="?action=ajoutListeAction&id_serie=' . $this->serie->id.'">FAVORIS</a>';
         }
 
-        return <<< HTML
-            <div class="video-item">
-                <a href="?action=displaySerie&id_serie={$this->serie->id}"><h3>{$this->serie->titre}</h3></a>
-                <p>{$this->serie->description}</p>
-                $favHtml    
-            </div>
+        return <<<HTML
+        <div class="serie-card">
+            <a href="?action=displaySerie&id_serie={$this->serie->id}">
+                <img src="img/$image" alt="$titre" class="serie-image">
+            </a>
+            <h3 class="serie-title">$titre ⭐ $moyenne</h3>
+            
+            $favHtml
+        </div>
         HTML;
     }
 

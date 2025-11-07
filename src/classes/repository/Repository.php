@@ -349,6 +349,15 @@ class Repository{
         return $result['moyenne'] !== null ? (float)$result['moyenne'] : null;
     }
 
+    public function getimagebyepisode(int $id_episode): ?string {
+        $query = "SELECT img FROM episode WHERE id = :id_episode";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute(['id_episode' => $id_episode]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['img'] ?? null;
+    }
+
+
     public function InsertToken(string $token, string $mail) :void {
         $user_id = $this->getUserIdByEmail($mail);
         $query = "insert into user2token (id_user, token) values (:id_user, :token)";

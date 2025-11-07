@@ -16,6 +16,8 @@ class CatalogueRender implements Render{
         $q = htmlspecialchars((string)($_GET['q'] ?? ''), ENT_QUOTES, 'UTF-8');
         $tri = htmlspecialchars((string)($_GET['tri'] ?? 'default'), ENT_QUOTES, 'UTF-8');
         $html = "<div class='catalogue'>\n";
+
+        $html .= "<div class='catalog-header'>\n";
         $html .= "<h2>Catalogue NetVOD</h2>\n";
         $html .= "<form method='get' action='index.php' class='catalog-search'>\n"; // Correction de l'action
         $html .= "<input type='hidden' name='action' value='search' />\n";
@@ -42,11 +44,15 @@ class CatalogueRender implements Render{
         }
         $html .= "</select>\n";
         $html .= "</form>\n";
+        $html .= "</form>\n";
+        $html .= "</div>\n";
+
+        $html .= "<div class='catalog-container'>\n";
         foreach ($this->catalogue->series as $serie) {
             $SerieRender = new SerieRender($serie);
-            $html .= "<li>" . $SerieRender->render() ."</li>\n";
+            $html .= $SerieRender->render();
         }
-        $html .= "</ul>\n";
+        $html .= "</div>\n";
         $html .= "</div>\n";
 
         return $html;
