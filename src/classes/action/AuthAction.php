@@ -12,25 +12,30 @@ class AuthAction extends Action{
     public function __invoke(): string {
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
            return <<<HTML
-            <html lang="fr">
-            <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>Document</title>
-            </head>
-            <body>
-                <h1>Authentification</h1>
-                <form action="?action=auth" method="post" enctype="multipart/form-data">
-                    <label for="email">Email :</label>
-                    <input type="email" id="email" name="email" required>
-                    <br>
-                    <label for="mdp">Mot de passe :</label>
-                    <input type="password" id="mdp" name="mdp" required>
-                    <br>
-                    <input type="submit" value="S'authentifier">
-                </form>
-            </body>
-            </html>
+            <div class="auth-container">
+                <div class="auth-card">
+                    <h2 class="auth-title">Authentification</h2>
+                    <p class="auth-subtitle">Connectez-vous pour accéder à votre contenu</p>
+                    
+                    <form action="?action=auth" method="post" class="form">
+                        <div class="form-group">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" id="email" name="email" class="form-input" placeholder="votre@email.com" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="mdp" class="form-label">Mot de passe</label>
+                            <input type="password" id="mdp" name="mdp" class="form-input" placeholder="••••••••" required>
+                        </div>
+                        
+                        <button type="submit" class="form-submit">Se connecter →</button>
+                    </form>
+                    
+                    <div class="auth-footer">
+                        <p>Pas encore de compte ? <a href="?action=register" class="auth-footer-link">S'inscrire</a></p>
+                    </div>
+                </div>
+            </div>
             HTML;
         }else{
             $mail = $_POST['email'];
@@ -41,16 +46,46 @@ class AuthAction extends Action{
                     AuthProvider::signin($mail, $_POST['mdp']);
 
                 } catch (AuthException $e) {
-                    return "<p class='center'>email ou mot de passe incorrect</p><a href='?action=auth'>Se reconnecter</a>";
+                    return <<<HTML
+                    <div class="auth-container">
+                        <div class="auth-card">
+                            <h2 class="auth-title">Erreur d'authentification</h2>
+                            <p class="auth-subtitle" style="color: #ef4444;">Email ou mot de passe incorrect</p>
+                            <div class="hero-actions">
+                                <a href="?action=auth" class="btn-hero btn-hero-primary">Réessayer</a>
+                            </div>
+                        </div>
+                    </div>
+                    HTML;
                 } catch (TokenException $e) {
-                    return "<p class='center'>Compte non-activé !</p>";
+                    return <<<HTML
+                    <div class="auth-container">
+                        <div class="auth-card">
+                            <h2 class="auth-title">Compte non-activé</h2>
+                            <p class="auth-subtitle" style="color: #f59e0b;">Veuillez activer votre compte avant de vous connecter</p>
+                            <div class="hero-actions">
+                                <a href="?action=auth" class="btn-hero btn-hero-primary">Retour</a>
+                            </div>
+                        </div>
+                    </div>
+                    HTML;
                 }
             } else{
-                return "<p class='center'>email incorrect</p><a href='?action=auth'>Se reconnecter</a>";
+                return <<<HTML
+                <div class="auth-container">
+                    <div class="auth-card">
+                        <h2 class="auth-title">Email invalide</h2>
+                        <p class="auth-subtitle" style="color: #ef4444;">Veuillez entrer une adresse email valide</p>
+                        <div class="hero-actions">
+                            <a href="?action=auth" class="btn-hero btn-hero-primary">Réessayer</a>
+                        </div>
+                    </div>
+                </div>
+                HTML;
             }
             $_SESSION['email'] = $mail;
-            return "<p class='center'>Authentification réussie pour l'utilisateur : $mail</p>";
+            header('Location: ?action=home');
+            exit();
         }
     }
-
 }

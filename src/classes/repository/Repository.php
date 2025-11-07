@@ -420,6 +420,35 @@ class Repository{
         }
         return $catalogue;
     }
+
+    public function getCatalogueTriTitre(): Catalogue {
+        $query = "SELECT * FROM serie ORDER BY titre ASC";
+        $stmt = $this->pdo->query($query);
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $catalogue = new Catalogue();
+        foreach ($result as $row) {
+            $series = new Series(
+                (int)$row['id'],
+                $row['titre'],
+                $row['descriptif'],
+                $row['img'],
+                (int)$row['annee'],
+                $row['date_ajout'],
+                $row['theme']?? "Non défini",
+                $row['public_cible'] ?? "Non défini"
+            );
+            $catalogue->addSeries($series);
+        }
+        return $catalogue;
+    }
+
+    public function getEpisodesBySerieIdListe(int $serieId): array {
+        $query = "SELECT * FROM episode WHERE serie_id = :serie_id ORDER BY numero ASC";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute(['serie_id' => $serieId]);
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
+    }
     
 
 }

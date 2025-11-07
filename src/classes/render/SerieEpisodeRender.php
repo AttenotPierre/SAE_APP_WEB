@@ -21,9 +21,11 @@ class SerieEpisodeRender implements Render {
         $resume = htmlspecialchars($this->episode->resume);
         $duree = htmlspecialchars($this->episode->duree);
         $numero = htmlspecialchars($this->episode->numero);
+        $id_episode = $this->episode->id;
+        $id_serie = $this->episode->serieId;
         return <<<HTML
         <div class="serie-card">
-                <a href="?action=DisplayEpisodeAction&id_episode={$this->episode->id}&id_serie={$this->episode->serieId}">
+                <a href='?action=RegarderAction&id_episode=$id_episode&id_serie=$id_serie'>
                     <img src="$image" alt="$titre" class="serie-image">
                 </a>
             <h3 class="serie-title">$titre episode $numero</h3>
