@@ -11,6 +11,9 @@ class ActionHome {
     public function __invoke(): string {
         $catalogue = Repository::getInstance()->getEnCoursSeries();
         $render = new CatalogueRender($catalogue);
+        
         return $render->render();
+
+        
     }
 }
