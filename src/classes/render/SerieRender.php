@@ -18,6 +18,7 @@ class SerieRender implements Render{
         $titre = htmlspecialchars($this->serie->titre);
         $image = htmlspecialchars($this->serie->img); 
         $moyenne = Repository::getInstance()->getMOYNoteForSeries((int)$this->serie->id);
+        $id = $this->serie->id;
 
         
 
@@ -31,6 +32,18 @@ class SerieRender implements Render{
             $favHtml = '<a href="?action=ajoutListeAction&id_serie=' . $this->serie->id.'">FAVORIS</a>';
         }
 
+        $episodes = Repository::getInstance()->getEpisodesBySerieIdListe((int)$id);
+
+        $regarder = '';
+        foreach ($episodes as $episode) {
+            $etat = Repository::getInstance()->getEtatEpisode((int)$episode['id']);
+            
+            if ($etat == 'non_defini') {
+                $regarder = '<a href="?action=RegarderAction&id_episode=' . $episode['id'] . '&id_serie=' . $this->serie->id . '">Regarder</a>';
+                break;
+            }
+        }
+
         return <<<HTML
         <div class="serie-card">
             <a href="?action=displaySerie&id_serie={$this->serie->id}">
@@ -38,7 +51,7 @@ class SerieRender implements Render{
             </a>
             <h3 class="serie-title">$titre ⭐ $moyenne</h3>
             
-            $favHtml
+            $favHtml $regarder
         </div>
         HTML;
     }

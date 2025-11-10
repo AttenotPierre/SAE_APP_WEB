@@ -16,7 +16,8 @@ class ActionHome {
         
 
         if (!isset($_SESSION['user'])) {
-            return "<p class='center'>vous devez vous connecter</p>";
+            header('Location: ?action=auth');
+            exit();
         }else{
             $html = <<<HTML
                 <section class="hero">
