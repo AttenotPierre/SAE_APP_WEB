@@ -420,7 +420,7 @@ class Repository{
         }
         return $catalogue;
     }
-
+    
 
     public function getCatalogueOrderedByDate(): Catalogue {
         $query = "SELECT * FROM serie ORDER BY date_ajout DESC";

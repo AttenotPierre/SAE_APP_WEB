@@ -33,11 +33,11 @@ class SerieRender implements Render{
         }
 
         $episodes = Repository::getInstance()->getEpisodesBySerieIdListe((int)$id);
-
+        
         $regarder = '';
         foreach ($episodes as $episode) {
             $etat = Repository::getInstance()->getEtatEpisode((int)$episode['id']);
-            
+        
             if ($etat == 'non_defini') {
                 $regarder = '<a href="?action=RegarderAction&id_episode=' . $episode['id'] . '&id_serie=' . $this->serie->id . '">Regarder</a>';
                 break;
