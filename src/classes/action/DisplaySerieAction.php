@@ -16,7 +16,7 @@ class DisplaySerieAction extends Action{
         
         $html = "<div class='serie'>\n";
         $html .= "<h2>{$serie->titre} ⭐$moyenne</h2>\n";
-        $html .= "<a href='?action=displayAllNoteAction&id_series={$id_serie}'>Voir les commentaires</a>\n";
+        $html .= "<a href='?action=displayAllNoteAction&id_series={$id_serie}' class='btn-login'>Voir les commentaires</a>\n";
 
         // $avis = Repository::getInstance()->getAvisByEpisodeId($id_serie);
         // $listeAvis = "";
