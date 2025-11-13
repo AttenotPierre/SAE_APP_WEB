@@ -6,7 +6,7 @@ use iutnc\SAE_APP_WEB\video\Episode;
 use iutnc\SAE_APP_WEB\video\Series;
 use iutnc\SAE_APP_WEB\repository\Repository;
 
-class SerieRender implements Render{
+class SerieRenderEnCours implements Render{
 
     protected Series $serie;  
 
@@ -52,7 +52,7 @@ class SerieRender implements Render{
             <h3 class="serie-title">$titre ⭐ $moyenne</h3>
             <div class="serie-actions">
                 $favHtml 
-                
+                $regarder
             </div>
         </div>
         HTML;

@@ -19,7 +19,7 @@ class CatalogueRenderEnCours implements Render{
         $html .= "<div class='catalog-container'>\n"; 
 
         foreach ($this->catalogue->series as $serie) {
-            $SerieRender = new SerieRender($serie);
+            $SerieRender = new SerieRenderEnCours($serie);
             $html .= $SerieRender->render();
         }
         
