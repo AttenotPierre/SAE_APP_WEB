@@ -313,6 +313,31 @@ body {
     margin: 0 10px 10px 10px;
 }
 
+/* -------- ACTIONS SÉRIE -------- */
+.serie-actions {
+    display: flex;
+    gap: 8px;
+    padding: 0 10px 10px 10px;
+    flex-wrap: wrap;
+}
+
+.serie-action-btn {
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.85em;
+    font-weight: 500;
+    text-decoration: none !important;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    border: 1px solid transparent;
+}
+
+a.serie-action-btn {
+    color: #ffffff !important;
+}
+
 .catalog-header {
     display: flex;
     justify-content: space-between;
