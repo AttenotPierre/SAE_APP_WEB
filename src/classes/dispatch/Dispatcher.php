@@ -72,6 +72,9 @@ class Dispatcher {
         case 'DisplaySerieFiniAction':
             $html = (new action\DisplayListSerieFiniAction())();
             break;
+        case 'profil':
+            $html = (new action\ProfilAction())();
+            break;
         default:
             $html = (new action\DefaultAction())();
             break;
@@ -83,7 +86,10 @@ class Dispatcher {
         if (isset($_SESSION['user'])) {
             $email = filter_var($_SESSION['email'], FILTER_SANITIZE_EMAIL);
             $pseudo = 
-            $userContent = "<span>Connecté : $email</span> <a href='?action=deconnect' class='btn-login'>Déconnexion</a>";
+            $userContent = "<span>Connecté : $email</span> <a href='?action=deconnect' class='btn-login'>Déconnexion</a>
+            <a href='?action=profil' class='btn-login'>Profil</a>
+            ";
+        
         } else {
             $userContent = '<a href="?action=auth" class="btn-login">Connexion</a>
                             <a href="?action=register" class="btn-primary">Inscription</a>';

@@ -11,6 +11,10 @@ use iutnc\SAE_APP_WEB\render\CatalogueRenderMaListe;
 
 class ActionHome {
     public function __invoke(): string {
+
+
+        
+
         if (!isset($_SESSION['user'])) {
             header('Location: ?action=auth');
             exit();
@@ -38,5 +42,6 @@ class ActionHome {
             $html.= $render2->render();
             return $html;
         }
+
     }
 }
