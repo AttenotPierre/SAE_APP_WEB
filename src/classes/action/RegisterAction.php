@@ -40,7 +40,7 @@ class RegisterAction extends Action{
                         
                         <div class="form-group">
                             <label for="mdp" class="form-label">Mot de passe</label>
-                            <input type="passt-èword" id="mdp" name="mdp" class="form-input" placeholder="••••••••" required>
+                            <input type="password" id="mdp" name="mdp" class="form-input" placeholder="••••••••" required>
                         </div>
                         
                         <button type="submit" class="form-submit">S'inscrire →</button>
