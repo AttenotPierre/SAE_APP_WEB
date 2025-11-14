@@ -33,14 +33,6 @@ class SerieEpisodeRender implements Render {
         </div>
         HTML;
 
-
-        // return <<< HTML
-        //     <div class="video-item">
-        //         <a href="?action=DisplayEpisodeAction&id_episode={$this->episode->id}&id_serie={$this->episode->serieId}"><h3>{$this->episode->titre} - Episode {$this->episode->numero}</h3></a>
-        //         <p>{$this->episode->resume}</p>
-
-        //     </div>
-        // HTML;
     }
 
 }

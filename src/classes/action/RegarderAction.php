@@ -76,36 +76,5 @@ class RegarderAction {
         
         return $html;
         
-        
-        
-        
-        
-        // $html = "<h2>Lecture en cours : {$episode->titre}</h2>";
-        // $html .= "<p>Durée : {$episode->duree} secondes</p>";
-
-        // // Lecteur vidéo HTML5
-        // $html .= <<<HTML
-        // <video controls autoplay>
-        //     <source src="$chemin_video" type="video/mp4">
-        //     Votre navigateur ne supporte pas la lecture vidéo.
-        // </video>
-        // HTML;
-
-        // $html .= <<<HTML
-        //     <form method="POST" action="?action=noter">
-        //                     <label for="note">Note (1-5) :</label>
-        //                     <input type="number" id="note" name="note" min="1" max="5" required>
-        //                     <br>
-        //                     <label for="comment">Commentaire :</label>
-        //                     <br>
-        //                     <textarea id="comment" name="comment"></textarea>
-        //                     <br>
-        //                     <input type="hidden" name="id_serie" value="$id_serie">
-        //                     <input type="submit" value="Noter">
-        //     </form>
-        // HTML;
-        // $html .= "<div><a href='?action=display-catalog'>⬅ Retour à la fiche</a></div>";
-        // $html .= "</div>";
-        // return $html;
     }
 }

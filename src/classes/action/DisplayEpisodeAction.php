@@ -16,7 +16,6 @@ class DisplayEpisodeAction extends Action {
         
 
         $repo = Repository::getInstance();
-        //faire methode getEpisodeById dans repository
         $episode = $repo->getEpisodeById($id_episode);
         if(!$episode){
             return "<p>Episode introuvable</p>";
