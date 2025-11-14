@@ -598,6 +598,73 @@ class Repository{
         return $catalogue;
     }
 
+    public function getCatalogueFiltre(string $theme, string $tri): Catalogue {
+
+        $select = "SELECT s.*";
+        $from = " FROM serie s";
+        $where = ""; // Le filtre
+        $params = []; // Les paramètres pour la requête préparée
+        $groupBy = ""; // Nécessaire pour les tris par 'note' et 'nb_episodes'
+        $orderBy = ""; // Le tri
+
+        if ($theme !== 'default') {
+            $where = " WHERE s.theme = :theme";
+            $params['theme'] = $theme;
+        }
+
+        switch ($tri) {
+            case 'date_ajout':
+                $orderBy = " ORDER BY s.date_ajout DESC";
+                break;
+            case 'name':
+                $orderBy = " ORDER BY s.titre ASC";
+                break;
+            case 'annee':
+                $orderBy = " ORDER BY s.annee DESC";
+                break;
+            
+            case 'nb_episodes':
+                $select = "SELECT s.*, COUNT(e.id) as nb_episodes";
+                $from .= " LEFT JOIN episode e ON s.id = e.serie_id";
+                $groupBy = " GROUP BY s.id";
+                $orderBy = " ORDER BY nb_episodes DESC";
+                break;
+            case 'note':
+                $select = "SELECT s.*, AVG(n.note) as moyenne_note";
+                $from .= " LEFT JOIN user2serie_note n ON s.id = n.id_serie";
+                $groupBy = " GROUP BY s.id";
+                $orderBy = " ORDER BY moyenne_note IS NULL ASC, moyenne_note ASC"; 
+                break;
+
+            case 'default':
+            default:
+                $orderBy = " ORDER BY s.id ASC";
+                break;
+        }
+
+        $sql = $select . $from . $where . $groupBy . $orderBy;
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($params);
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $catalogue = new Catalogue();
+        foreach ($result as $row) {
+            $series = new Series(
+                (int)$row['id'],
+                $row['titre'],
+                $row['descriptif'],
+                $row['img'],
+                (int)$row['annee'],
+                $row['date_ajout'],
+                $row['theme']?? "Non défini",
+                $row['public_cible'] ?? "Non défini"
+            );
+            $catalogue->addSeries($series);
+        }
+        return $catalogue;
+    }
+
     
 
 

@@ -42,10 +42,7 @@ class CatalogueRender implements Render{
             $html .= "<option value='{$value}' {$selected}>{$label}</option>\n";
         }
         $html .= "</select>\n";
-        $html .= "</form>\n";
 
-        $html .= "<form method='get' action='index.php' class='catalog-sort'>\n"; // Correction de l'action
-        $html .= "<input type='hidden' name='action' value='display-catalog' />\n";
         $html .= "<label for='tri'>Trier par :</label>\n";
         $html .= "<select name='tri' id='tri' onchange='this.form.submit()'>\n";
         $options = [
@@ -61,7 +58,6 @@ class CatalogueRender implements Render{
             $html .= "<option value='{$value}' {$selected}>{$label}</option>\n";
         }
         $html .= "</select>\n";
-        $html .= "</form>\n";
         $html .= "</form>\n";
         $html .= "</div>\n";
 

@@ -16,45 +16,7 @@ class DisplayCatalogAction extends Action {
             $theme_option = $_GET['theme'] ?? 'default';
             $repo = Repository::getInstance();
 
-            switch ($theme_option) {
-                case 'Paysage':
-                    $results = $repo->getCatalogueByTheme('Paysage');
-                    break;
-                case 'Animaux':
-                    $results = $repo->getCatalogueByTheme('Animaux');
-                    break;
-                case 'Sport':
-                    $results = $repo->getCatalogueByTheme('Sport');
-                    break;
-                case 'default':
-                default:
-                    $results = $repo->getCatalogue();
-                    break;
-            }
-            
-            switch ($tri_option) {
-                case 'date_ajout':
-                    $results = $repo->getCatalogueOrderedByDate();
-                    break;
-                case 'name':
-                    $results = $repo->getCatalogueOrderedByTitle();
-                    break;
-                case 'annee':
-                    $results = $repo->getCatalogueOrderedByYear();
-                    break;
-                case 'nb_episodes':
-                    $results = $repo->getCatalogueOrderedByNbEpisodes();
-                    break;
-                case 'note':
-                    $results = $repo->getCatalogueOrderedByMoyenne();
-                    break;
-                case 'default':
-                default:
-                    $results = $repo->getCatalogue();
-                    break;
-            }
-
-            
+            $results = $repo->getCatalogueFiltre($theme_option, $tri_option);            
 
             $renderer = new CatalogueRender($results);
             $rendu = $renderer->render();
