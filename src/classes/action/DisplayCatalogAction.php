@@ -13,7 +13,25 @@ class DisplayCatalogAction extends Action {
     public function __invoke() : string {
         if (isset($_SESSION['email'])) {
             $tri_option = $_GET['tri'] ?? 'default';
+            $theme_option = $_GET['theme'] ?? 'default';
             $repo = Repository::getInstance();
+
+            switch ($theme_option) {
+                case 'Paysage':
+                    $results = $repo->getCatalogueByTheme('Paysage');
+                    break;
+                case 'Animaux':
+                    $results = $repo->getCatalogueByTheme('Animaux');
+                    break;
+                case 'Sport':
+                    $results = $repo->getCatalogueByTheme('Sport');
+                    break;
+                case 'default':
+                default:
+                    $results = $repo->getCatalogue();
+                    break;
+            }
+            
             switch ($tri_option) {
                 case 'date_ajout':
                     $results = $repo->getCatalogueOrderedByDate();
@@ -35,6 +53,9 @@ class DisplayCatalogAction extends Action {
                     $results = $repo->getCatalogue();
                     break;
             }
+
+            
+
             $renderer = new CatalogueRender($results);
             $rendu = $renderer->render();
             return $rendu;
