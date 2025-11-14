@@ -75,6 +75,12 @@ class Dispatcher {
         case 'profil':
             $html = (new action\ProfilAction())();
             break;
+        case 'mdp_forget':
+            $html = (new action\MdpForgetAction())();
+            break;
+        case 'reset_password':
+            $html = (new action\ResetPasswordAction())();
+            break;
         default:
             $html = (new action\DefaultAction())();
             break;

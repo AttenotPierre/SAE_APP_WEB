@@ -542,6 +542,39 @@ class Repository{
         }
         return $catalogue;
     }
-    
+
+    public function updatePassword(mixed $newPassword, $email): void
+    {
+        $id_user = $this->getUserIdByEmail($email);
+        $query = "UPDATE User SET passwd = :newPassword WHERE id = :id_user";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute(['newPassword' => $newPassword, 'id_user' => $id_user]);
+    }
+
+    public function getHashAndEmailByToken(string $token_clair): array|false {
+
+
+        $query = "SELECT token as token_hash, user2token.id_user, user.email 
+              FROM user2token
+              JOIN user ON user2token.id_user = user.id";
+        $stmt = $this->pdo->query($query);
+        $all_tokens = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        foreach ($all_tokens as $row) {
+            if (password_verify($token_clair, $row['token_hash'])) {
+                return $row;
+            }
+        }
+        return false;
+    }
+
+    public function deleteTokenByEmail(mixed $email)
+    {
+        $id_user = $this->getUserIdByEmail($email);
+        $query = "DELETE FROM user2token WHERE id_user = :id_user";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute(['id_user' => $id_user]);
+    }
+
 
 }

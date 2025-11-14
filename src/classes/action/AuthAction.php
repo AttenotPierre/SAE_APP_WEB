@@ -34,6 +34,9 @@ class AuthAction extends Action{
                     <div class="auth-footer">
                         <p>Pas encore de compte ? <a href="?action=register" class="auth-footer-link">S'inscrire</a></p>
                     </div>
+                    <div class="auth-footer">
+                        <p>Mot de passe oublié ? <a href="?action=mdp_forget" class="auth-footer-link">Réinitialiser son mot de passe</a></p>
+                    </div>
                 </div>
             </div>
             HTML;
