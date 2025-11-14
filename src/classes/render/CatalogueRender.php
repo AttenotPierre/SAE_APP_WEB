@@ -27,7 +27,6 @@ class CatalogueRender implements Render{
         $html .= "<button type='submit'>Rechercher</button>\n";
         $html .= "</form>\n";
 
-        //Formulaire de Tri/Filtre
         $html .= "<form method='get' action='index.php' class='catalog-sort'>\n";
         $html .= "<input type='hidden' name='action' value='display-catalog' />\n";
         $html .= "<label for='theme'>Filtrer par genre :</label>\n";
@@ -40,20 +39,6 @@ class CatalogueRender implements Render{
         ];
         foreach ($options as $value => $label){
             $selected = ($theme === $value) ? 'selected' : '';
-            $html .= "<option value='{$value}' {$selected}>{$label}</option>\n";
-        }
-        $html .= "</select>\n";
-
-        $html .= "<label for='public'>Filtrer par public cible :</label>\n";
-        $html .= "<select name='public' id='public' onchange='this.form.submit()'>\n";
-        $options = [
-            'default' => 'Par défaut',
-            'Tout Public' => 'Tout Public',
-            'Adulte' => 'Adulte',
-            'Enfant' => 'Enfant'
-        ];
-        foreach ($options as $value => $label){
-            $selected = ($public === $value) ? 'selected' : '';
             $html .= "<option value='{$value}' {$selected}>{$label}</option>\n";
         }
         $html .= "</select>\n";
@@ -73,6 +58,24 @@ class CatalogueRender implements Render{
             $html .= "<option value='{$value}' {$selected}>{$label}</option>\n";
         }
         $html .= "</select>\n";
+
+        $html .= "<br>\n";
+
+        $html .= "<label for='public'>Filtrer par public cible :</label>\n";
+        $html .= "<select name='public' id='public' onchange='this.form.submit()'>\n";
+        $options = [
+            'default' => 'Par défaut',
+            'Tout Public' => 'Tout Public',
+            'Adulte' => 'Adulte',
+            'Enfant' => 'Enfant'
+        ];
+        foreach ($options as $value => $label){
+            $selected = ($public === $value) ? 'selected' : '';
+            $html .= "<option value='{$value}' {$selected}>{$label}</option>\n";
+        }
+        $html .= "</select>\n";
+
+        
         $html .= "</form>\n";
         $html .= "</div>\n";
 
