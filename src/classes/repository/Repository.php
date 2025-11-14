@@ -568,12 +568,34 @@ class Repository{
         return false;
     }
 
-    public function deleteTokenByEmail(mixed $email)
+    public function deleteTokenByEmail(mixed $email): void
     {
         $id_user = $this->getUserIdByEmail($email);
         $query = "DELETE FROM user2token WHERE id_user = :id_user";
         $stmt = $this->pdo->prepare($query);
         $stmt->execute(['id_user' => $id_user]);
+    }
+
+    public function getCatalogueByTheme(string $theme): Catalogue {
+        $query = "SELECT * FROM serie WHERE theme = :theme";
+        $stmt = $this->pdo->prepare($query);
+        $stmt->execute(['theme' => $theme]);
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $catalogue = new Catalogue();
+        foreach ($result as $row) {
+            $series = new Series(
+                (int)$row['id'],
+                $row['titre'],
+                $row['descriptif'],
+                $row['img'],
+                (int)$row['annee'],
+                $row['date_ajout'],
+                $row['theme']?? "Non défini",
+                $row['public_cible'] ?? "Non défini"
+            );
+            $catalogue->addSeries($series);
+        }
+        return $catalogue;
     }
 
 
