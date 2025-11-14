@@ -21,12 +21,18 @@ class ResetPasswordAction extends Action
         }
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             return <<<HTML
-                <form method="POST" action="?action=reset_password&token={$token}">
-                    <label for="new_password">Nouveau mot de passe :</label>
-                    <input type="password" id="new_password" name="new_password" required>
-                    <button type="submit">Réinitialiser le mot de passe</button>
-                </form> 
-                HTML;
+            <div class="auth-container">
+                <div class="auth-card">
+                    <form method="POST" action="?action=reset_password&token={$token}" class="form">
+                        <div class="form-group">
+                            <label for="new_password">Nouveau mot de passe :</label>
+                            <input type="password" id="new_password" name="new_password" class="form-input" placeholder="••••••••" required>
+                        </div>
+                        <button type="submit" class="form-submit">Réinitialiser le mot de passe</button>
+                    </form> 
+                </div>
+            </div>
+            HTML;
         } else {
             $newPassword = password_hash($_POST['new_password'], PASSWORD_BCRYPT);
             $email = $_SESSION['reset_user_email'] ?? null;

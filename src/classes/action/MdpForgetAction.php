@@ -15,11 +15,17 @@ class MdpForgetAction extends Action {
         $token = $this->generateActivationToken();
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             return <<<HTML
-            <form method="POST" action="?action=mdp_forget">
-                <label for="email">Entrez votre adresse e-mail :</label>
-                <input type="email" id="email" name="email" required>
-                <button type="submit">Réinitialiser le mot de passe</button>
-            </form>
+            <div class="auth-container">
+                <div class="auth-card">
+                    <form method="POST" action="?action=mdp_forget" class="form">
+                        <div class="form-group">
+                            <label for="email">Entrez votre adresse e-mail :</label>
+                            <input type="email" id="email" name="email" class="form-input" placeholder="votre@email.com" required>
+                        </div>
+                        <button type="submit" class="form-submit">Réinitialiser le mot de passe</button>
+                    </form>
+                </div>
+            </div>
             HTML;
         } else {
             $email = $_POST['email'];
