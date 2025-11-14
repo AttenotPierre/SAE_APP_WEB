@@ -598,20 +598,31 @@ class Repository{
         return $catalogue;
     }
 
-    public function getCatalogueFiltre(string $theme, string $tri): Catalogue {
+    public function getCatalogueFiltre(string $theme, string $public, string $tri): Catalogue {
 
         $select = "SELECT s.*";
         $from = " FROM serie s";
-        $where = ""; // Le filtre
-        $params = []; // Les paramètres pour la requête préparée
-        $groupBy = ""; // Nécessaire pour les tris par 'note' et 'nb_episodes'
-        $orderBy = ""; // Le tri
+        $groupBy = "";
+        $orderBy = "";
+        
+        $where = "";
+        $params = [];
+        $conditions = [];
 
         if ($theme !== 'default') {
-            $where = " WHERE s.theme = :theme";
+            $conditions[] = "s.theme = :theme";
             $params['theme'] = $theme;
         }
 
+        if ($public !== 'default') {
+            $conditions[] = "s.public_cible = :public";
+            $params['public'] = $public;
+        }
+
+        if (!empty($conditions)) {
+            $where = " WHERE " . implode(' AND ', $conditions);
+        }
+        
         switch ($tri) {
             case 'date_ajout':
                 $orderBy = " ORDER BY s.date_ajout DESC";

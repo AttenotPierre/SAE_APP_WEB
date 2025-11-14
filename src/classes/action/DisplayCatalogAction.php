@@ -14,9 +14,11 @@ class DisplayCatalogAction extends Action {
         if (isset($_SESSION['email'])) {
             $tri_option = $_GET['tri'] ?? 'default';
             $theme_option = $_GET['theme'] ?? 'default';
+            $public_option = $_GET['public'] ?? 'default';
+    
             $repo = Repository::getInstance();
 
-            $results = $repo->getCatalogueFiltre($theme_option, $tri_option);            
+            $results = $repo->getCatalogueFiltre($theme_option, $public_option, $tri_option);            
 
             $renderer = new CatalogueRender($results);
             $rendu = $renderer->render();

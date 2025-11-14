@@ -15,19 +15,20 @@ class CatalogueRender implements Render{
     public function render (): string{
         $q = htmlspecialchars((string)($_GET['q'] ?? ''), ENT_QUOTES, 'UTF-8');
         $tri = htmlspecialchars((string)($_GET['tri'] ?? 'default'), ENT_QUOTES, 'UTF-8');
-        $theme = htmlspecialchars((string)($_GET['theme'] ?? 'all'), ENT_QUOTES, 'UTF-8');
-        $public = htmlspecialchars((string)($_GET['public_cible'] ?? 'all'), ENT_QUOTES, 'UTF-8');
+        $theme = htmlspecialchars((string)($_GET['theme'] ?? 'default'), ENT_QUOTES, 'UTF-8');
+        $public = htmlspecialchars((string)($_GET['public'] ?? 'default'), ENT_QUOTES, 'UTF-8');
         $html = "<div class='catalogue'>\n";
 
         $html .= "<div class='catalog-header'>\n";
         $html .= "<h2>Catalogue NetVOD</h2>\n";
-        $html .= "<form method='get' action='index.php' class='catalog-search'>\n"; // Correction de l'action
+        $html .= "<form method='get' action='index.php' class='catalog-search'>\n"; 
         $html .= "<input type='hidden' name='action' value='search' />\n";
         $html .= "<input type='text' name='q' placeholder='Rechercher...' value='{$q}' />\n";
         $html .= "<button type='submit'>Rechercher</button>\n";
         $html .= "</form>\n";
 
-        $html .= "<form method='get' action='index.php' class='catalog-sort'>\n"; // Correction de l'action
+        //Formulaire de Tri/Filtre
+        $html .= "<form method='get' action='index.php' class='catalog-sort'>\n";
         $html .= "<input type='hidden' name='action' value='display-catalog' />\n";
         $html .= "<label for='theme'>Filtrer par genre :</label>\n";
         $html .= "<select name='theme' id='theme' onchange='this.form.submit()'>\n";
@@ -39,6 +40,20 @@ class CatalogueRender implements Render{
         ];
         foreach ($options as $value => $label){
             $selected = ($theme === $value) ? 'selected' : '';
+            $html .= "<option value='{$value}' {$selected}>{$label}</option>\n";
+        }
+        $html .= "</select>\n";
+
+        $html .= "<label for='public'>Filtrer par public cible :</label>\n";
+        $html .= "<select name='public' id='public' onchange='this.form.submit()'>\n";
+        $options = [
+            'default' => 'Par défaut',
+            'Tout Public' => 'Tout Public',
+            'Adulte' => 'Adulte',
+            'Enfant' => 'Enfant'
+        ];
+        foreach ($options as $value => $label){
+            $selected = ($public === $value) ? 'selected' : '';
             $html .= "<option value='{$value}' {$selected}>{$label}</option>\n";
         }
         $html .= "</select>\n";
